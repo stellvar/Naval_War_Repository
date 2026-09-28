@@ -30,6 +30,10 @@ public class Tablero {
         return barcos;
     }
 
+    public void colocarFlotaAleatoria() {
+        /*barco en coordenadas de random numer*/
+    }
+
     public boolean dentroDelTablero(int fila, int columna) {
         return fila >= 0 && fila < tamano && columna >= 0 && columna < tamano;
     }
