@@ -1,6 +1,7 @@
 package co.edu.uptc.model;
 
 public class Jugador {
+    public int cantidadAvatares = 6;
     public int avatarPorDefecto = 5;
 
     private String nombre;
@@ -19,6 +20,16 @@ public class Jugador {
         this.mejorTurnos = 0;
         if (biografia != null) {
             this.biografia = biografia;
+        }
+        if (avatar >= 0 && avatar < cantidadAvatares) {
+            this.avatar = avatar;
+        }
+    }
+
+    public void registrarVictoria(int turnos) {
+        partidasGanadas++;
+        if (mejorTurnos == 0 || turnos < mejorTurnos) {
+            mejorTurnos = turnos;
         }
     }
 
@@ -59,16 +70,8 @@ public class Jugador {
     }
 
     public void setAvatar(int avatar) {
+        if (avatar >= 0 && avatar < cantidadAvatares) {
             this.avatar = avatar;
-
-    }
-
-
-
-    public void registrarVictoria(int turnos) {
-        partidasGanadas++;
-        if (mejorTurnos == 0 || turnos < mejorTurnos) {
-            mejorTurnos = turnos;
         }
     }
 }
