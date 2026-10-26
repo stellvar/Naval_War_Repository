@@ -160,4 +160,37 @@ public class Tablero {
         }
         return total;
     }
+    public int[] casillaSinDisparar(Random azar) {
+        int disponibles = 0;
+        for (int f = 0; f < tamano; f++) {
+            for (int c = 0; c < tamano; c++) {
+                if (disparos[f][c] == sinDisparar) {
+                    disponibles++;
+                }
+            }
+        }
+        if (disponibles == 0) {
+            return null;
+        }
+        int elegida = azar.nextInt(disponibles);
+        for (int f = 0; f < tamano; f++) {
+            for (int c = 0; c < tamano; c++) {
+                if (disparos[f][c] == sinDisparar && elegida-- == 0) {
+                    return new int[]{f, c};
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean tieneMismosDisparosQue(Tablero otro) {
+        for (int f = 0; f < tamano; f++) {
+            for (int c = 0; c < tamano; c++) {
+                if (disparos[f][c] != otro.disparos[f][c]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
