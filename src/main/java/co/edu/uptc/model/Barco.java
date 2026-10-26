@@ -1,6 +1,6 @@
 package co.edu.uptc.model;
 
-public class Barco {
+public abstract class Barco {
     private String nombre;
     private int tamano;
     private int vida;

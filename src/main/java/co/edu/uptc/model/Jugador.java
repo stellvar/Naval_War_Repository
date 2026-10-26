@@ -1,40 +1,38 @@
 package co.edu.uptc.model;
 
+import java.util.ArrayList;
+
 public class Jugador {
-    public int cantidadAvatares = 6;
-    public int avatarPorDefecto = 5;
+    public static final int cantidadAvatares = 6;
+    public static final int avatarPorDefecto = 5;
+
+    private static final int DERROTA = 0;
 
     private String nombre;
     private String biografia;
     private int avatar;
-    private int partidasGanadas;
-    private int partidasPerdidas;
-    private int mejorTurnos;
+
+    private ArrayList<Integer> resultados = new ArrayList<>();
+
+    private Jugador() {
+    }
 
     public Jugador(String nombre, String biografia, int avatar) {
         this.nombre = nombre;
-        this.biografia = "";
-        this.avatar = avatarPorDefecto;
-        this.partidasGanadas = 0;
-        this.partidasPerdidas = 0;
-        this.mejorTurnos = 0;
-        if (biografia != null) {
-            this.biografia = biografia;
-        }
-        if (avatar >= 0 && avatar < cantidadAvatares) {
-            this.avatar = avatar;
-        }
+        this.biografia = biografia == null ? "" : biografia;
+        this.avatar = avatarValido(avatar) ? avatar : avatarPorDefecto;
+    }
+
+    private static boolean avatarValido(int avatar) {
+        return avatar >= 0 && avatar < cantidadAvatares;
     }
 
     public void registrarVictoria(int turnos) {
-        partidasGanadas++;
-        if (mejorTurnos == 0 || turnos < mejorTurnos) {
-            mejorTurnos = turnos;
-        }
+        resultados.add(Math.max(1, turnos));
     }
 
     public void registrarDerrota() {
-        partidasPerdidas++;
+        resultados.add(DERROTA);
     }
 
     public String getNombre() {
@@ -49,28 +47,46 @@ public class Jugador {
         return avatar;
     }
 
+    public int getPartidasJugadas() {
+        return resultados.size();
+    }
+
     public int getPartidasGanadas() {
-        return partidasGanadas;
+        int ganadas = 0;
+        for (int resultado : resultados) {
+            if (resultado != DERROTA) {
+                ganadas++;
+            }
+        }
+        return ganadas;
     }
 
     public int getPartidasPerdidas() {
-        return partidasPerdidas;
+        int perdidas = 0;
+        for (int resultado : resultados) {
+            if (resultado == DERROTA) {
+                perdidas++;
+            }
+        }
+        return perdidas;
     }
 
     public int getMejorTurnos() {
-        return mejorTurnos;
+        int mejor = 0;
+        for (int resultado : resultados) {
+            if (resultado != DERROTA && (mejor == 0 || resultado < mejor)) {
+                mejor = resultado;
+            }
+        }
+        return mejor;
     }
 
     public void setBiografia(String biografia) {
-        if (biografia == null) {
-            this.biografia = "";
-        } else {
-            this.biografia = biografia;
-        }
+        this.biografia = biografia == null ? "" : biografia;
     }
 
     public void setAvatar(int avatar) {
-        if (avatar >= 0 && avatar < cantidadAvatares) {
+        if (avatarValido(avatar)) {
             this.avatar = avatar;
         }
     }

@@ -1,6 +1,9 @@
 package co.edu.uptc.model;
 
 public class Configuracion {
+
+    private static final String[] IDIOMAS_SOPORTADOS = {"es", "en"};
+
     private int volumenMusica;
     private int volumenEfectos;
     private boolean vozDeMando;
@@ -41,18 +44,21 @@ public class Configuracion {
         this.vozDeMando = vozDeMando;
     }
 
-    public void setIdioma(String idioma) {
-        this.idioma = idioma;
+    public boolean setIdioma(String idioma) {
+        if (idioma == null) {
+            return false;
+        }
+        String normalizado = idioma.trim().toLowerCase();
+        for (String soportado : IDIOMAS_SOPORTADOS) {
+            if (soportado.equals(normalizado)) {
+                this.idioma = normalizado;
+                return true;
+            }
+        }
+        return false;
     }
 
-    private int limitarVolumen(int volumen) {
-        if (volumen < 0) {
-            return 0;
-        }
-        if (volumen > 100) {
-            return 100;
-        }
-        return volumen;
+    private static int limitarVolumen(int volumen) {
+        return Math.max(0, Math.min(100, volumen));
     }
 }
-

@@ -1,37 +1,32 @@
 package co.edu.uptc.model;
-import co.edu.uptc.persistance.JsonRepository;
 
+import co.edu.uptc.persistencia.JsonRepository;
+
+import java.io.File;
 import java.util.ArrayList;
 
 public class JugadorRepository {
-    private JsonRepository<Jugadores> repository;
+
+    private static final String ARCHIVO = "jugadores.json";
+
+    private final JsonRepository<Jugadores> repository;
     private Jugadores misJugadores;
 
     public JugadorRepository() {
-        this.repository = new JsonRepository<>("src/data/jugadores.json", Jugadores.class);
+        this(JsonRepository.CARPETA_DATOS);
     }
 
-    public void init() {
-        this.misJugadores = repository.readFile();
-        if (this.misJugadores == null) {
-            this.misJugadores = new Jugadores();
-        }
+    public JugadorRepository(String carpeta) {
+        this.repository = new JsonRepository<>(new File(carpeta, ARCHIVO).getPath(), Jugadores.class);
+        Jugadores cargados = repository.readFile();
+        this.misJugadores = cargados != null ? cargados : new Jugadores();
     }
 
     public Jugador guardarJugador(String nombre, String biografia, int avatar) {
-        if (nombre == null || nombre.trim().equals("")) {
-            return null;
+        Jugador jugador = misJugadores.guardarJugador(nombre, biografia, avatar);
+        if (jugador != null) {
+            persistir();
         }
-        nombre = nombre.trim();
-        Jugador jugador = misJugadores.buscarJugador(nombre);
-        if (jugador == null) {
-            jugador = new Jugador(nombre, biografia, avatar);
-            misJugadores.agregarJugador(jugador);
-        } else {
-            jugador.setBiografia(biografia);
-            jugador.setAvatar(avatar);
-        }
-        repository.writeFile(misJugadores);
         return jugador;
     }
 
@@ -39,20 +34,24 @@ public class JugadorRepository {
         return misJugadores.buscarJugador(nombre);
     }
 
-    public void registrarVictoria(String nombre, int turnos) {
+    public boolean registrarVictoria(String nombre, int turnos) {
         Jugador jugador = misJugadores.buscarJugador(nombre);
-        if (jugador != null) {
-            jugador.registrarVictoria(turnos);
-            repository.writeFile(misJugadores);
+        if (jugador == null) {
+            return false;
         }
+        jugador.registrarVictoria(turnos);
+        persistir();
+        return true;
     }
 
-    public void registrarDerrota(String nombre) {
+    public boolean registrarDerrota(String nombre) {
         Jugador jugador = misJugadores.buscarJugador(nombre);
-        if (jugador != null) {
-            jugador.registrarDerrota();
-            repository.writeFile(misJugadores);
+        if (jugador == null) {
+            return false;
         }
+        jugador.registrarDerrota();
+        persistir();
+        return true;
     }
 
     public ArrayList<Jugador> getListaJugadores() {
@@ -60,21 +59,10 @@ public class JugadorRepository {
     }
 
     public ArrayList<Jugador> getRanking() {
-        ArrayList<Jugador> ranking = new ArrayList<>();
-        for (Jugador jugador : misJugadores.getListaJugadores()) {
-            if (jugador.getMejorTurnos() > 0) {
-                ranking.add(jugador);
-            }
-        }
-        for (int i = 0; i < ranking.size() - 1; i++) {
-            for (int j = 0; j < ranking.size() - 1 - i; j++) {
-                if (ranking.get(j).getMejorTurnos() > ranking.get(j + 1).getMejorTurnos()) {
-                    Jugador aux = ranking.get(j);
-                    ranking.set(j, ranking.get(j + 1));
-                    ranking.set(j + 1, aux);
-                }
-            }
-        }
-        return ranking;
+        return misJugadores.getRanking();
+    }
+
+    private void persistir() {
+        repository.writeFile(misJugadores);
     }
 }

@@ -1,15 +1,25 @@
 package co.edu.uptc.model;
-import co.edu.uptc.persistance.JsonRepository;
+
+import co.edu.uptc.persistencia.JsonRepository;
+
+import java.io.File;
 
 public class PartidaRepository {
-    private JsonRepository<Partida> repository;
+
+    private static final String ARCHIVO = "partida.json";
+
+    private final JsonRepository<Partida> repository;
 
     public PartidaRepository() {
-        this.repository = new JsonRepository<>("src/data/partida.json", Partida.class);
+        this(JsonRepository.CARPETA_DATOS);
     }
 
-    public void guardarPartida(Partida partida) {
-        repository.writeFile(partida);
+    public PartidaRepository(String carpeta) {
+        this.repository = new JsonRepository<>(new File(carpeta, ARCHIVO).getPath(), Partida.class);
+    }
+
+    public boolean guardarPartida(Partida partida) {
+        return repository.writeFile(partida);
     }
 
     public Partida cargarPartida() {
@@ -17,10 +27,10 @@ public class PartidaRepository {
     }
 
     public boolean hayPartidaGuardada() {
-        return repository.readFile() != null;
+        return repository.existe() && cargarPartida() != null;
     }
 
     public void borrarPartida() {
-        repository.writeFile(null);
+        repository.borrar();
     }
 }

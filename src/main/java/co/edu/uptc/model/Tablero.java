@@ -1,13 +1,14 @@
 package co.edu.uptc.model;
+
 import java.util.Random;
 
 public class Tablero {
-    public static int tamano = 10;
-    public static int sinDisparar = 0;
-    public static int agua = 1;
-    public  int tocado = 2;
-    public  int hundido = 3;
-    public static int invalido = -1;
+    public static final int tamano = 10;
+    public static final int sinDisparar = 0;
+    public static final int agua = 1;
+    public static final int tocado = 2;
+    public static final int hundido = 3;
+    public static final int invalido = -1;
 
     private PortaAviones portaaviones;
     private Acorazado acorazado;
@@ -34,7 +35,19 @@ public class Tablero {
         return fila >= 0 && fila < tamano && columna >= 0 && columna < tamano;
     }
 
+    private boolean esDeEsteTablero(Barco barco) {
+        for (Barco propio : getBarcos()) {
+            if (propio == barco) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean colocarBarco(Barco barco, int fila, int columna, boolean horizontal) {
+        if (!esDeEsteTablero(barco)) {
+            return false;
+        }
         int filaFinal = fila;
         int columnaFinal = columna;
         if (horizontal) {
@@ -45,7 +58,6 @@ public class Tablero {
         if (!dentroDelTablero(fila, columna) || !dentroDelTablero(filaFinal, columnaFinal)) {
             return false;
         }
-
         Barco[] barcos = getBarcos();
         for (int i = 0; i < barcos.length; i++) {
             if (barcos[i] != barco) {
@@ -87,9 +99,8 @@ public class Tablero {
     }
 
     public boolean estaListo() {
-        Barco[] barcos = getBarcos();
-        for (int i = 0; i < barcos.length; i++) {
-            if (!barcos[i].estaColocado()) {
+        for (Barco barco : getBarcos()) {
+            if (!barco.estaColocado()) {
                 return false;
             }
         }
@@ -100,15 +111,11 @@ public class Tablero {
         if (!dentroDelTablero(fila, columna) || disparos[fila][columna] != sinDisparar) {
             return invalido;
         }
-        Barco[] barcos = getBarcos();
-        for (int i = 0; i < barcos.length; i++) {
-            if (barcos[i].ocupa(fila, columna)) {
-                barcos[i].recibirImpacto(fila, columna);
+        for (Barco barco : getBarcos()) {
+            if (barco.ocupa(fila, columna)) {
+                barco.recibirImpacto(fila, columna);
                 disparos[fila][columna] = tocado;
-                if (barcos[i].estaHundido()) {
-                    return hundido;
-                }
-                return tocado;
+                return barco.estaHundido() ? hundido : tocado;
             }
         }
         disparos[fila][columna] = agua;
@@ -120,10 +127,9 @@ public class Tablero {
     }
 
     public Barco getBarcoEn(int fila, int columna) {
-        Barco[] barcos = getBarcos();
-        for (int i = 0; i < barcos.length; i++) {
-            if (barcos[i].ocupa(fila, columna)) {
-                return barcos[i];
+        for (Barco barco : getBarcos()) {
+            if (barco.ocupa(fila, columna)) {
+                return barco;
             }
         }
         return null;
@@ -131,9 +137,8 @@ public class Tablero {
 
     public int barcosRestantes() {
         int restantes = 0;
-        Barco[] barcos = getBarcos();
-        for (int i = 0; i < barcos.length; i++) {
-            if (!barcos[i].estaHundido()) {
+        for (Barco barco : getBarcos()) {
+            if (!barco.estaHundido()) {
                 restantes++;
             }
         }
@@ -143,5 +148,16 @@ public class Tablero {
     public boolean flotaHundida() {
         return barcosRestantes() == 0;
     }
-}
 
+    public int contarDisparosAgua() {
+        int total = 0;
+        for (int f = 0; f < tamano; f++) {
+            for (int c = 0; c < tamano; c++) {
+                if (disparos[f][c] == agua) {
+                    total++;
+                }
+            }
+        }
+        return total;
+    }
+}
