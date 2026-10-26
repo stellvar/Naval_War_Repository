@@ -62,6 +62,22 @@ public class JugadorRepository {
         return misJugadores.getRanking();
     }
 
+    public boolean registrarResultadoPartida(Partida partida) {
+        if (!partida.hayGanador()) {
+            return false;
+        }
+        Jugador ganador = partida.getGanador();
+        Jugador perdedor = partida.getPerdedor();
+        int turnos = partida.getTurnos(ganador);
+        boolean victoriaOk = esComputador(ganador) || registrarVictoria(ganador.getNombre(), turnos);
+        boolean derrotaOk = esComputador(perdedor) || registrarDerrota(perdedor.getNombre());
+        return victoriaOk && derrotaOk;
+    }
+
+    private static boolean esComputador(Jugador jugador) {
+        return jugador.getNombre().equalsIgnoreCase(Partida.nombreComputador);
+    }
+
     private void persistir() {
         repository.writeFile(misJugadores);
     }

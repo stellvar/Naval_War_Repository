@@ -5,6 +5,8 @@ import java.util.Random;
 public class Partida {
     public static final String nombreComputador = "Computador";
 
+    public enum Etapa { COLOCANDO_BARCOS, EN_CURSO, TERMINADA }
+
     private Jugador jugador1;
     private Jugador jugador2;
     private boolean contraComputador;
@@ -155,6 +157,16 @@ public class Partida {
 
     public Tablero getTableroRival() {
         return mismoJugador(jugadorActual, jugador1) ? tablero2 : tablero1;
+    }
+
+    public Etapa getEtapa() {
+        if (hayGanador()) {
+            return Etapa.TERMINADA;
+        }
+        if (!puedeComenzar()) {
+            return Etapa.COLOCANDO_BARCOS;
+        }
+        return Etapa.EN_CURSO;
     }
 
     public Jugador getPerdedor() {
