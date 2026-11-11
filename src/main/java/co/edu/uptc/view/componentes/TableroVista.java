@@ -10,9 +10,9 @@ public final class TableroVista {
     /* un barco dibujado  */
     public static final class Nave {
         private final int tamano;
-        private final int fila;
-        private final int columna;
-        private final boolean horizontal;
+        private int fila;
+        private int columna;
+        private boolean horizontal;
         private final boolean[] impactos;
 
         public Nave(int tamano, int fila, int columna, boolean horizontal, int... segmentosImpactados) {
@@ -60,6 +60,12 @@ public final class TableroVista {
                     ? f == fila && c >= columna && c < columna + tamano
                     : c == columna && f >= fila && f < fila + tamano;
         }
+
+        public void mover(int fila, int columna, boolean horizontal) {
+            this.fila = fila;
+            this.columna = columna;
+            this.horizontal = horizontal;
+        }
     }
 
     private final Nave[] naves;
@@ -94,6 +100,39 @@ public final class TableroVista {
             }
         }
         return restantes;
+    }
+
+    /* indica si la nave cabe en la posicion dada sin salirse ni chocar con otra */
+    public boolean puedeColocar(Nave nave, int fila, int columna, boolean horizontal) {
+        int filaFinal = horizontal ? fila : fila + nave.getTamano() - 1;
+        int columnaFinal = horizontal ? columna + nave.getTamano() - 1 : columna;
+        if (fila < 0 || columna < 0 || filaFinal >= N || columnaFinal >= N) {
+            return false;
+        }
+        for (int i = 0; i < nave.getTamano(); i++) {
+            int f = horizontal ? fila : fila + i;
+            int c = horizontal ? columna + i : columna;
+            for (Nave otra : naves) {
+                if (otra != nave && otra.ocupa(f, c)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /* mueve la nave a la posicion dada si es valida */
+    public boolean colocar(Nave nave, int fila, int columna, boolean horizontal) {
+        if (!puedeColocar(nave, fila, columna, horizontal)) {
+            return false;
+        }
+        nave.mover(fila, columna, horizontal);
+        return true;
+    }
+
+    /* gira la nave sobre su primera casilla si hay espacio */
+    public boolean rotar(Nave nave) {
+        return colocar(nave, nave.getFila(), nave.getColumna(), !nave.isHorizontal());
     }
 
     private TableroVista disparar(int[]... casillas) {

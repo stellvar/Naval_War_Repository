@@ -3,6 +3,7 @@ package co.edu.uptc.view.componentes;
 import co.edu.uptc.view.Tema;
 
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -42,6 +43,13 @@ public class TableroPanel extends JComponent {
     private OyenteCasilla oyente;
     private int hoverFila = -1;
     private int hoverColumna = -1;
+    private boolean colocable;
+    private TableroVista.Nave arrastrada;
+    private int desplazaFila;
+    private int desplazaColumna;
+    private int destinoFila;
+    private int destinoColumna;
+    private boolean destinoValido;
 
     public TableroPanel(EstiloFlota estilo) {
         this.estilo = estilo;
@@ -50,8 +58,27 @@ public class TableroPanel extends JComponent {
         setMinimumSize(new Dimension(220, 180));
         MouseAdapter raton = new MouseAdapter() {
             @Override
+            public void mousePressed(MouseEvent e) {
+                if (colocable && tablero != null) {
+                    empezarArrastre(e);
+                }
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (arrastrada != null) {
+                    arrastrar(e.getPoint());
+                }
+            }
+
+            @Override
             public void mouseMoved(MouseEvent e) {
                 actualizarHover(e.getPoint());
+                if (colocable && tablero != null) {
+                    int[] celda = celdaEn(e.getPoint());
+                    boolean sobreBarco = celda != null && tablero.getNaveEn(celda[0], celda[1]) != null;
+                    setCursor(sobreBarco ? Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR) : Cursor.getDefaultCursor());
+                }
             }
 
             @Override
@@ -64,6 +91,10 @@ public class TableroPanel extends JComponent {
 
             @Override
             public void mouseReleased(MouseEvent e) {
+                if (arrastrada != null) {
+                    soltar();
+                    return;
+                }
                 int[] celda = celdaEn(e.getPoint());
                 if (interactivo && celda != null && oyente != null) {
                     oyente.alSeleccionar(celda[0], celda[1]);
@@ -92,6 +123,61 @@ public class TableroPanel extends JComponent {
 
     public void setOyente(OyenteCasilla oyente) {
         this.oyente = oyente;
+    }
+
+    /* permite arrastrar los barcos para posicionarlos (clic derecho para girarlos) */
+    public void setColocable(boolean colocable) {
+        this.colocable = colocable;
+        if (!colocable) {
+            arrastrada = null;
+            setCursor(Cursor.getDefaultCursor());
+        }
+        repaint();
+    }
+
+    private void empezarArrastre(MouseEvent e) {
+        int[] celda = celdaEn(e.getPoint());
+        if (celda == null) {
+            return;
+        }
+        TableroVista.Nave nave = tablero.getNaveEn(celda[0], celda[1]);
+        if (nave == null) {
+            return;
+        }
+        if (SwingUtilities.isRightMouseButton(e)) {
+            tablero.rotar(nave);
+            repaint();
+        } else if (SwingUtilities.isLeftMouseButton(e)) {
+            arrastrada = nave;
+            desplazaFila = celda[0] - nave.getFila();
+            desplazaColumna = celda[1] - nave.getColumna();
+            destinoFila = nave.getFila();
+            destinoColumna = nave.getColumna();
+            destinoValido = true;
+            setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+            repaint();
+        }
+    }
+
+    private void arrastrar(Point p) {
+        Rectangle2D r = rejilla();
+        int columna = (int) Math.floor((p.x - r.getX()) / (r.getWidth() / N)) - desplazaColumna;
+        int fila = (int) Math.floor((p.y - r.getY()) / (r.getHeight() / N)) - desplazaFila;
+        if (fila != destinoFila || columna != destinoColumna) {
+            destinoFila = fila;
+            destinoColumna = columna;
+            destinoValido = tablero.puedeColocar(arrastrada, fila, columna, arrastrada.isHorizontal());
+            repaint();
+        }
+    }
+
+    private void soltar() {
+        if (destinoValido) {
+            tablero.colocar(arrastrada, destinoFila, destinoColumna, arrastrada.isHorizontal());
+        }
+        arrastrada = null;
+        setCursor(Cursor.getDefaultCursor());
+        repaint();
     }
 
     private Rectangle2D rejilla() {
@@ -175,9 +261,12 @@ public class TableroPanel extends JComponent {
 
         if (tablero != null) {
             for (TableroVista.Nave barco : tablero.getNaves()) {
-                if (verBarcos || barco.estaHundido()) {
+                if (barco != arrastrada && (verBarcos || barco.estaHundido())) {
                     dibujarBarco(g, barco, r, cw, ch);
                 }
+            }
+            if (arrastrada != null) {
+                dibujarFantasma(g, r, cw, ch);
             }
             for (int f = 0; f < N; f++) {
                 for (int c = 0; c < N; c++) {
@@ -222,6 +311,22 @@ public class TableroPanel extends JComponent {
         g.setColor(BARCO);
         g.fill(capsula);
         g.setColor(CONTORNO);
+        g.setStroke(new BasicStroke(2f));
+        g.draw(capsula);
+    }
+
+    private void dibujarFantasma(Graphics2D g, Rectangle2D r, double cw, double ch) {
+        double margen = Math.min(cw, ch) * 0.14;
+        boolean horizontal = arrastrada.isHorizontal();
+        double x = r.getX() + destinoColumna * cw + margen;
+        double y = r.getY() + destinoFila * ch + margen;
+        double ancho = (horizontal ? arrastrada.getTamano() * cw : cw) - 2 * margen;
+        double alto = (horizontal ? ch : arrastrada.getTamano() * ch) - 2 * margen;
+        double arco = Math.min(ancho, alto);
+        RoundRectangle2D capsula = new RoundRectangle2D.Double(x, y, ancho, alto, arco, arco);
+        g.setColor(destinoValido ? new Color(243, 247, 251, 200) : new Color(220, 60, 60, 170));
+        g.fill(capsula);
+        g.setColor(destinoValido ? CONTORNO : Tema.IMPACTO);
         g.setStroke(new BasicStroke(2f));
         g.draw(capsula);
     }
