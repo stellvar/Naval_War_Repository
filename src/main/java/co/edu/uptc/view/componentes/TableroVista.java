@@ -75,6 +75,17 @@ public final class TableroVista {
         this.naves = naves;
     }
 
+    /* crea un tablero a partir de naves y disparos ya calculados (los entrega el controlador) */
+    public static TableroVista crear(Nave[] naves, int[][] disparos) {
+        TableroVista tablero = new TableroVista(naves);
+        for (int f = 0; f < N; f++) {
+            for (int c = 0; c < N; c++) {
+                tablero.disparos[f][c] = disparos[f][c];
+            }
+        }
+        return tablero;
+    }
+
     public Nave[] getNaves() {
         return naves;
     }

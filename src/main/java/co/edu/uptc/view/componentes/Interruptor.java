@@ -1,8 +1,5 @@
 package co.edu.uptc.view.componentes;
 
-import co.edu.uptc.view.Tema;
-
-import javax.swing.JComponent;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -14,6 +11,10 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
 import java.util.function.Consumer;
+
+import javax.swing.JComponent;
+
+import co.edu.uptc.view.Tema;
 
 /* Interruptor de encendido / apagado. */
 public class Interruptor extends JComponent {

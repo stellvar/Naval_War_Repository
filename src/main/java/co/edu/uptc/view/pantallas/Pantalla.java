@@ -1,18 +1,26 @@
 package co.edu.uptc.view.pantallas;
 
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+
+import co.edu.uptc.view.ControladorVista;
 import co.edu.uptc.view.Navegador;
 import co.edu.uptc.view.componentes.PanelFondo;
-
-import javax.swing.*;
-import java.awt.*;
 
 
 public abstract class Pantalla extends PanelFondo {
 
     protected final Navegador nav;
+    protected final ControladorVista ctrl;
 
-    protected Pantalla(Navegador nav) {
+    protected Pantalla(Navegador nav, ControladorVista ctrl) {
         this.nav = nav;
+        this.ctrl = ctrl;
         setLayout(new BorderLayout());
     }
 
@@ -49,3 +57,4 @@ public abstract class Pantalla extends PanelFondo {
         return envoltorio;
     }
 }
+

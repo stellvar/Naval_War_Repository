@@ -1,8 +1,5 @@
 package co.edu.uptc.view.componentes;
 
-import co.edu.uptc.view.Tema;
-
-import javax.swing.Icon;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
@@ -11,6 +8,10 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+
+import javax.swing.Icon;
+
+import co.edu.uptc.view.Tema;
 
 
 public final class Banderas {

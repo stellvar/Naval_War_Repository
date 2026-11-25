@@ -1,14 +1,15 @@
 package co.edu.uptc.view.componentes;
 
-import co.edu.uptc.view.Tema;
-
-import javax.swing.Icon;
-import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+
+import javax.swing.Icon;
+import javax.swing.JButton;
+
+import co.edu.uptc.view.Tema;
 
 
 public class BotonIcono extends JButton {
@@ -38,13 +39,16 @@ public class BotonIcono extends JButton {
         Tema.calidad(g);
         int w = getWidth();
         int h = getHeight();
+        Color fondo = Tema.CIRCULO;
         if (activo) {
-            g.setColor(new Color(4, 30, 58, 245));
-            g.fillOval(0, 0, w, h);
+            fondo = Tema.CIRCULO_ACTIVO;
         } else if (getModel().isRollover()) {
-            g.setColor(new Color(255, 255, 255, 40));
-            g.fillOval(0, 0, w, h);
+            fondo = Tema.CIRCULO_HOVER;
         }
+        /* círculo perfecto aunque el layout estire el botón */
+        int d = Math.min(w, h);
+        g.setColor(fondo);
+        g.fillOval((w - d) / 2, (h - d) / 2, d, d);
         icono.paintIcon(this, g, (w - icono.getIconWidth()) / 2, (h - icono.getIconHeight()) / 2);
         g.dispose();
     }

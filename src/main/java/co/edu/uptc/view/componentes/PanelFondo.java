@@ -1,7 +1,5 @@
 package co.edu.uptc.view.componentes;
 
-import javax.imageio.ImageIO;
-import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -9,6 +7,9 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
+
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
 
 /* panel que pinta la imagen de fondo (/img/fondo.jpg) */
 public class PanelFondo extends JPanel {
@@ -35,15 +36,18 @@ public class PanelFondo extends JPanel {
     protected void paintComponent(Graphics g0) {
         super.paintComponent(g0);
         Graphics2D g = (Graphics2D) g0.create();
-        int w = getWidth();
-        int h = getHeight();
+        pintar(g, getWidth(), getHeight());
+        g.dispose();
+    }
+
+    /* dibuja el fondo predeterminado (también lo usa el velo opaco de las ventanas emergentes) */
+    public static void pintar(Graphics2D g, int w, int h) {
         if (original == null) {
             g.setPaint(new GradientPaint(0, 0, new Color(0x0B3A78), 0, h, new Color(0x041A38)));
             g.fillRect(0, 0, w, h);
         } else {
             g.drawImage(escalada(w, h), 0, 0, null);
         }
-        g.dispose();
     }
 
     /* escala centrada */

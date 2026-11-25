@@ -1,9 +1,5 @@
 package co.edu.uptc.view.componentes;
 
-import co.edu.uptc.view.Tema;
-
-import javax.swing.Icon;
-import javax.swing.JButton;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -13,6 +9,11 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.RoundRectangle2D;
+
+import javax.swing.Icon;
+import javax.swing.JButton;
+
+import co.edu.uptc.view.Tema;
 
 /* icono arriba y texto abajo */
 public class OpcionIcono extends JButton {

@@ -4,15 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-
-
+/* arranque de la interfaz: lo invoca el controlador y le entrega su contrato */
 public final class MainVista {
 
     private MainVista() {
     }
 
-    public static void main(String[] args) {
+    public static void iniciar(ControladorVista controlador) {
         SwingUtilities.invokeLater(() -> {
+            Textos.setIdioma(controlador.getIdioma());
+            Audio.setVolumenMusica(controlador.getVolumenMusica());
+            Audio.setVolumenEfectos(controlador.getVolumenEfectos());
+
             Toolkit.getDefaultToolkit().addAWTEventListener(ev -> {
                 MouseEvent m = (MouseEvent) ev;
                 if (m.getID() == MouseEvent.MOUSE_PRESSED
@@ -21,7 +24,7 @@ public final class MainVista {
                 }
             }, AWTEvent.MOUSE_EVENT_MASK);
 
-            new VentanaPrincipal().setVisible(true);
+            new VentanaPrincipal(controlador).setVisible(true);
             Audio.iniciarMusica();
         });
     }

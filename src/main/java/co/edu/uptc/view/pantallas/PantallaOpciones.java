@@ -1,6 +1,7 @@
 package co.edu.uptc.view.pantallas;
 
 import co.edu.uptc.view.IdPantalla;
+import co.edu.uptc.view.ControladorVista;
 import co.edu.uptc.view.Navegador;
 import co.edu.uptc.view.Tema;
 import co.edu.uptc.view.Textos;
@@ -29,8 +30,8 @@ import java.awt.Insets;
 /* configuración de sonido, perfil e idioma*/
 public class PantallaOpciones extends Pantalla {
 
-    public PantallaOpciones(Navegador nav) {
-        super(nav);
+    public PantallaOpciones(Navegador nav, ControladorVista ctrl) {
+        super(nav, ctrl);
     }
 
     @Override
@@ -47,14 +48,14 @@ public class PantallaOpciones extends Pantalla {
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.insets = new Insets(0, 0, 0, 30);
-        panel.add(new PanelSonido(false), c);
+        panel.add(new PanelSonido(false, ctrl), c);
         c.gridx = 1;
         c.insets = new Insets(0, 30, 0, 0);
         panel.add(columnaSocial(), c);
         add(centrado(panel, 12), BorderLayout.CENTER);
 
         BotonMarino menu = new BotonMarino(Textos.t("comun.menu"), Iconos.de(Iconos.Tipo.ANCLA, 28),
-                BotonMarino.Forma.PILDORA, 300, 58, 22);
+                BotonMarino.Forma.CHAFLAN, 300, 58, 22);
         menu.addActionListener(e -> nav.ir(IdPantalla.MENU));
         add(new BarraInferior(null, menu, null), BorderLayout.SOUTH);
     }
@@ -81,6 +82,8 @@ public class PantallaOpciones extends Pantalla {
 
         SelectorIdioma selector = new SelectorIdioma(Textos.getIdioma(), codigo -> {
             Textos.setIdioma(codigo);
+            ctrl.setIdioma(codigo);
+            ctrl.guardarConfiguracion();
             nav.recargar();
         });
         selector.setAlignmentX(Component.LEFT_ALIGNMENT);

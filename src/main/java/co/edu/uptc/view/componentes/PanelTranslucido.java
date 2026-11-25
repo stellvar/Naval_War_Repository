@@ -1,12 +1,13 @@
 package co.edu.uptc.view.componentes;
 
-import co.edu.uptc.view.Tema;
-
-import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.LayoutManager;
 import java.awt.geom.RoundRectangle2D;
+
+import javax.swing.JPanel;
+
+import co.edu.uptc.view.Tema;
 
 /* Panel de fondo azul */
 public class PanelTranslucido extends JPanel {

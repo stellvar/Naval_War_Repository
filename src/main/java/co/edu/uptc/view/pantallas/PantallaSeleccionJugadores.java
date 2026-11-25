@@ -1,6 +1,7 @@
 package co.edu.uptc.view.pantallas;
 
 import co.edu.uptc.view.IdPantalla;
+import co.edu.uptc.view.ControladorVista;
 import co.edu.uptc.view.Navegador;
 import co.edu.uptc.view.Tema;
 import co.edu.uptc.view.Textos;
@@ -28,8 +29,8 @@ public class PantallaSeleccionJugadores extends Pantalla {
     private OpcionIcono uno;
     private OpcionIcono dos;
 
-    public PantallaSeleccionJugadores(Navegador nav) {
-        super(nav);
+    public PantallaSeleccionJugadores(Navegador nav, ControladorVista ctrl) {
+        super(nav, ctrl);
     }
 
     @Override
@@ -60,8 +61,8 @@ public class PantallaSeleccionJugadores extends Pantalla {
         seleccionar(1);
         add(centrado(panel, 24), BorderLayout.CENTER);
 
-        BotonMarino jugar = new BotonMarino(Textos.t("comun.jugar"), Iconos.de(Iconos.Tipo.JUGAR, 28),
-                BotonMarino.Forma.PILDORA, 300, 58, 22);
+        BotonMarino jugar = new BotonMarino(Textos.t("comun.jugar"), Iconos.de(Iconos.Tipo.JUGAR, 28, Tema.ACCION_TEXTO),
+                BotonMarino.Forma.CHAFLAN, 270, 52, 20).principal();
         jugar.addActionListener(e -> continuar());
         add(new BarraInferior(null, jugar, null), BorderLayout.SOUTH);
     }
@@ -75,12 +76,21 @@ public class PantallaSeleccionJugadores extends Pantalla {
 
     private void continuar() {
         final int jugadores = cantidad;
+        ctrl.iniciarSeleccion(jugadores);
         nav.editarPerfil(1, () -> {
             if (jugadores == 1) {
-                nav.ir(IdPantalla.JUEGO);
+                empezarPartida();
             } else {
-                nav.editarPerfil(2, () -> nav.ir(IdPantalla.JUEGO));
+                nav.editarPerfil(2, this::empezarPartida);
             }
         });
+    }
+
+    private void empezarPartida() {
+        if (ctrl.crearPartida()) {
+            nav.ir(IdPantalla.JUEGO);
+        } else {
+            nav.ir(IdPantalla.SELECCION);
+        }
     }
 }

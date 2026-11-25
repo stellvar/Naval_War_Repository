@@ -1,25 +1,32 @@
 package co.edu.uptc.view.componentes;
 
-import co.edu.uptc.view.Tema;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
+
+import co.edu.uptc.view.Tema;
 
 /* Una fila de la tabla de estadísticas: avatar, nombre, línea guía y turnos */
 public class FilaRanking extends JPanel {
 
     private static final int ANCHO_NOMBRE = 250;
+
+    private boolean resaltada;
 
     private FilaRanking() {
         super(new GridBagLayout());
@@ -44,6 +51,44 @@ public class FilaRanking extends JPanel {
         fila.agregar(new Guia(), 2);
         fila.agregar(texto(String.valueOf(turnos), Tema.TEXTO, SwingConstants.RIGHT), 3);
         return fila;
+    }
+
+    /* hace la tarjeta pulsable (cursor de mano y resaltado al pasar el raton) */
+    public FilaRanking alPulsar(Runnable accion) {
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                resaltada = true;
+                repaint();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                resaltada = false;
+                repaint();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (contains(e.getPoint())) {
+                    accion.run();
+                }
+            }
+        });
+        return this;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g0) {
+        if (resaltada) {
+            Graphics2D g = (Graphics2D) g0.create();
+            Tema.calidad(g);
+            g.setColor(new Color(255, 255, 255, 34));
+            g.fill(new RoundRectangle2D.Double(-8, 0, getWidth() + 16, getHeight(), 14, 14));
+            g.dispose();
+        }
+        super.paintComponent(g0);
     }
 
     private static JLabel texto(String valor, Color color, int alineacion) {

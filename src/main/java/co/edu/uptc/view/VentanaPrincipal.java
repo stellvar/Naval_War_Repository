@@ -28,8 +28,10 @@ public class VentanaPrincipal extends JFrame {
             }
         });
         setIconImage(icono());
-        setMinimumSize(new Dimension(1100, 660));
+        Rectangle util = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+        setMinimumSize(new Dimension(Math.min(1100, util.width), Math.min(660, util.height)));
         pack();
+        setSize(Math.min(getWidth(), util.width), Math.min(getHeight(), util.height));
         setLocationRelativeTo(null);
     }
 

@@ -1,7 +1,9 @@
 package co.edu.uptc.view.pantallas;
 
 import co.edu.uptc.view.IdPantalla;
+import co.edu.uptc.view.ControladorVista;
 import co.edu.uptc.view.Navegador;
+import co.edu.uptc.view.PerfilVista;
 import co.edu.uptc.view.Tema;
 import co.edu.uptc.view.Textos;
 import co.edu.uptc.view.componentes.AreaRedondeada;
@@ -37,8 +39,8 @@ public class PantallaPersonalizar extends Pantalla {
     private SelectorAvatar selector;
     private JLabel error;
 
-    public PantallaPersonalizar(Navegador nav) {
-        super(nav);
+    public PantallaPersonalizar(Navegador nav, ControladorVista ctrl) {
+        super(nav, ctrl);
     }
 
     public void configurar(int numero, Runnable alGuardar) {
@@ -59,6 +61,12 @@ public class PantallaPersonalizar extends Pantalla {
         areaBio.setMaximumSize(new Dimension(330, 112));
         areaBio.setAlignmentX(CENTER_ALIGNMENT);
         selector = new SelectorAvatar(92);
+        PerfilVista previo = ctrl.getPerfil(numero);
+        if (previo != null) {
+            campoNombre.setText(previo.nombre());
+            areaBio.setTexto(previo.biografia());
+            selector.setSeleccionado(previo.avatar());
+        }
         error = new JLabel(" ", SwingConstants.CENTER);
         error.setFont(Tema.fuente(Font.BOLD, 15));
         error.setForeground(Tema.ERROR);
@@ -104,10 +112,10 @@ public class PantallaPersonalizar extends Pantalla {
         add(centrado(panel, 4), BorderLayout.CENTER);
 
         BotonMarino menu = new BotonMarino(Textos.t("comun.menu"), Iconos.de(Iconos.Tipo.ANCLA, 28),
-                BotonMarino.Forma.PILDORA, 270, 58, 22);
+                BotonMarino.Forma.CHAFLAN, 244, 52, 20);
         menu.addActionListener(e -> nav.ir(IdPantalla.MENU));
-        BotonMarino guardar = new BotonMarino(Textos.t("comun.guardar"), Iconos.de(Iconos.Tipo.MARCADOR, 28),
-                BotonMarino.Forma.PILDORA, 270, 58, 22);
+        BotonMarino guardar = new BotonMarino(Textos.t("comun.guardar"), Iconos.de(Iconos.Tipo.MARCADOR, 28, Tema.ACCION_TEXTO),
+                BotonMarino.Forma.CHAFLAN, 244, 52, 20).principal();
         guardar.addActionListener(e -> guardar());
         add(new BarraInferior(menu, null, guardar), BorderLayout.SOUTH);
     }
@@ -122,8 +130,19 @@ public class PantallaPersonalizar extends Pantalla {
 
 
     private void guardar() {
+        String nombre = campoNombre.getText().trim();
+        if (nombre.isEmpty()) {
+            nombre = "Player" + numero;
+        }
+        String clave = ctrl.guardarPerfil(numero, nombre, areaBio.getTexto(), selector.getSeleccionado());
+        if (clave != null) {
+            error.setText(Textos.t(clave));
+            return;
+        }
+        error.setText(" ");
         if (alGuardar != null) {
             alGuardar.run();
         }
     }
 }
+

@@ -1,6 +1,7 @@
 package co.edu.uptc.view.pantallas;
 
 import co.edu.uptc.view.IdPantalla;
+import co.edu.uptc.view.ControladorVista;
 import co.edu.uptc.view.Navegador;
 import co.edu.uptc.view.Tema;
 import co.edu.uptc.view.Textos;
@@ -28,8 +29,8 @@ import java.awt.Insets;
 /*reglas y miniaturas */
 public class PantallaGuia extends Pantalla {
 
-    public PantallaGuia(Navegador nav) {
-        super(nav);
+    public PantallaGuia(Navegador nav, ControladorVista ctrl) {
+        super(nav, ctrl);
     }
 
     @Override
@@ -56,10 +57,10 @@ public class PantallaGuia extends Pantalla {
         add(expandido(panel, new Insets(0, 80, 6, 80)), BorderLayout.CENTER);
 
         BotonMarino menu = new BotonMarino(Textos.t("comun.menu"), Iconos.de(Iconos.Tipo.ANCLA, 28),
-                BotonMarino.Forma.PILDORA, 250, 56, 20);
+                BotonMarino.Forma.CHAFLAN, 226, 50, 18);
         menu.addActionListener(e -> nav.ir(IdPantalla.MENU));
-        BotonMarino jugar = new BotonMarino(Textos.t("comun.jugar"), Iconos.de(Iconos.Tipo.PISTOLA, 28),
-                BotonMarino.Forma.PILDORA, 250, 56, 20);
+        BotonMarino jugar = new BotonMarino(Textos.t("comun.jugar"), Iconos.de(Iconos.Tipo.PISTOLA, 28, Tema.ACCION_TEXTO),
+                BotonMarino.Forma.CHAFLAN, 226, 50, 18).principal();
         jugar.addActionListener(e -> nav.ir(IdPantalla.SELECCION));
         add(new BarraInferior(menu, null, jugar), BorderLayout.SOUTH);
     }

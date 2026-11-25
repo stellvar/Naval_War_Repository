@@ -1,17 +1,18 @@
 package co.edu.uptc.view.componentes;
 
-import co.edu.uptc.view.Tema;
+import java.awt.BasicStroke;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
-import java.awt.BasicStroke;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.RoundRectangle2D;
+
+import co.edu.uptc.view.Tema;
 
 /* cuadrícula de avatares seleccionables. */
 public class SelectorAvatar extends JPanel {

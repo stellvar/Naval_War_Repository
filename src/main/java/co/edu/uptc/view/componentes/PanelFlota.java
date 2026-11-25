@@ -1,9 +1,5 @@
 package co.edu.uptc.view.componentes;
 
-import co.edu.uptc.view.Tema;
-import co.edu.uptc.view.Textos;
-
-import javax.swing.JComponent;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,6 +11,11 @@ import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+
+import javax.swing.JComponent;
+
+import co.edu.uptc.view.Tema;
+import co.edu.uptc.view.Textos;
 
 /* seccion lateral del estado de la flota */
 public class PanelFlota extends JComponent {
@@ -74,9 +75,13 @@ public class PanelFlota extends JComponent {
         double zona = (h - cabecera - 10) / barcos.length;
         g.setFont(Tema.fuente(Font.BOLD, 13));
         fm = g.getFontMetrics();
-        for (int i = 0; i < barcos.length; i++) {
-            TableroVista.Nave barco = barcos[i];
-            double yBase = cabecera + 10 + i * zona;
+        int posicion = 0;
+        for (TableroVista.Nave barco : barcos) {
+            if (estilo == EstiloFlota.ENEMIGO && !barco.estaHundido()) {
+                continue;
+            }
+            double yBase = cabecera + 10 + posicion * zona;
+            posicion++;
             g.setColor(Tema.TEXTO);
             g.drawString(Textos.t("barco." + barco.getTamano()), 14, (float) (yBase + fm.getAscent() + 2));
             double segmento = Math.min(21, (w - 28.0) / 5);

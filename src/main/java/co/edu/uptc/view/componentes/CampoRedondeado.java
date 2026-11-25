@@ -1,6 +1,10 @@
 package co.edu.uptc.view.componentes;
 
-import co.edu.uptc.view.Tema;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
@@ -9,11 +13,8 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.JTextComponent;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+
+import co.edu.uptc.view.Tema;
 
 
 public class CampoRedondeado extends JTextField {

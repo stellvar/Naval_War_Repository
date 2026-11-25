@@ -2,8 +2,8 @@ package co.edu.uptc.view;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.GraphicsEnvironment;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -21,12 +21,30 @@ public final class Tema {
     public static final Color BOTON_HOVER = new Color(0x0A3560);
     public static final Color BOTON_PRESIONADO = new Color(0x021426);
     public static final Color BOTON_BORDE = new Color(0x1B4F85);
-    public static final Color VELO_CLARO = new Color(214, 227, 241, 178);
-    public static final Color VELO_OSCURO = new Color(3, 14, 30, 255);
+    /* velo estándar de todas las ventanas emergentes: oscuro y translúcido, deja ver lo que hay debajo */
+    public static final Color VELO_OSCURO = new Color(3, 14, 30, 180);
+    /* velo opaco: tapa por completo la pantalla (cambio de turno, para no ver la flota del rival)
+       y deja ver en su lugar el fondo predeterminado oscurecido */
+    public static final Color VELO_TAPADO = new Color(3, 14, 30, 255);
+    /* panel de las ventanas emergentes: un tono más claro que el velo */
+    public static final Color PANEL_MODAL = new Color(9, 44, 84);
     public static final Color CAMPO = new Color(0x8A96A6);
     public static final Color CAMPO_TEXTO = new Color(0x08203A);
     public static final Color IMPACTO = new Color(0xE11D2E);
     public static final Color ERROR = new Color(0xFFA3AD);
+
+    /* botones principales (la acción que queremos que el usuario elija: jugar, continuar, listo...):
+       estilo invertido del botón regular, fondo claro y contenido oscuro */
+    public static final Color ACCION = CIAN;
+    public static final Color ACCION_HOVER = TEXTO;
+    public static final Color ACCION_PRESIONADO = CIAN.darker();
+    public static final Color ACCION_BORDE = TEXTO;
+    public static final Color ACCION_TEXTO = BOTON;
+
+    /* fondo circular de los botones de icono (engranaje en partida) */
+    public static final Color CIRCULO = new Color(2, 14, 32, 150);
+    public static final Color CIRCULO_HOVER = new Color(10, 45, 85, 200);
+    public static final Color CIRCULO_ACTIVO = new Color(4, 30, 58, 245);
 
     private static final String FAMILIA = elegirFamilia();
 

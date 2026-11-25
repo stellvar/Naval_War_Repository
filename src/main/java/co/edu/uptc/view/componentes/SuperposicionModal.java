@@ -23,7 +23,7 @@ import java.awt.geom.Ellipse2D;
  */
 public class SuperposicionModal extends JPanel {
 
-    private Color velo = Tema.VELO_CLARO;
+    private Color velo = Tema.VELO_OSCURO;
     private Component huecoDe;
     private boolean cerrarAlClicFuera;
     private Runnable alCerrar;
@@ -50,7 +50,7 @@ public class SuperposicionModal extends JPanel {
         this.contenido = contenido;
         this.cerrarAlClicFuera = cerrarAlClicFuera;
         this.huecoDe = huecoDe;
-        this.velo = velo == null ? Tema.VELO_CLARO : velo;
+        this.velo = velo == null ? Tema.VELO_OSCURO : velo;
         this.alCerrar = alCerrar;
         add(contenido, new GridBagConstraints());
         setVisible(true);
@@ -103,7 +103,14 @@ public class SuperposicionModal extends JPanel {
         if (hueco != null) {
             area.subtract(new Area(hueco));
         }
-        g.setColor(velo);
+        if (velo.getAlpha() == 255) {
+            /* velo opaco: la pantalla de abajo queda tapada; en su lugar se ve el fondo predeterminado oscurecido */
+            g.setClip(area);
+            PanelFondo.pintar(g, getWidth(), getHeight());
+            g.setColor(Tema.VELO_OSCURO);
+        } else {
+            g.setColor(velo);
+        }
         g.fill(area);
         g.dispose();
     }

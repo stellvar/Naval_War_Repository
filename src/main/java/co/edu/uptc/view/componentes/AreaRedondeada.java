@@ -1,9 +1,15 @@
 package co.edu.uptc.view.componentes;
 
-import co.edu.uptc.view.Tema;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+import co.edu.uptc.view.Tema;
 
 
 public class AreaRedondeada extends JPanel {

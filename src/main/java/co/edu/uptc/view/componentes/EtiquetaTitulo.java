@@ -1,15 +1,16 @@
 package co.edu.uptc.view.componentes;
 
-import co.edu.uptc.view.Tema;
-
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 import java.awt.BasicStroke;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.RoundRectangle2D;
+
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+
+import co.edu.uptc.view.Tema;
 
 /* ("TU FLOTA" / "CAMPO ENEMIGO"). */
 public class EtiquetaTitulo extends JLabel {

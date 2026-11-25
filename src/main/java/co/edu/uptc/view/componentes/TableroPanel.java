@@ -1,9 +1,5 @@
 package co.edu.uptc.view.componentes;
 
-import co.edu.uptc.view.Tema;
-
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -21,6 +17,11 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+
+import co.edu.uptc.view.Tema;
+
 /*
  * tablero 10 x 10. Se reutiliza en "TU FLOTA" (muestra los barcos)
  * Dibuja un TableroVista
@@ -32,6 +33,11 @@ public class TableroPanel extends JComponent {
         void alSeleccionar(int fila, int columna);
     }
 
+    /* se llama cuando el jugador mueve o gira un barco (colocable) */
+    public interface OyenteColocacion {
+        void alColocar(int indiceNave, int fila, int columna, boolean horizontal);
+    }
+
     private static final int N = TableroVista.N;
     private static final Color BARCO = new Color(0xF3F7FB);
     private static final Color CONTORNO = new Color(0x07142E);
@@ -41,6 +47,7 @@ public class TableroPanel extends JComponent {
     private boolean verBarcos;
     private boolean interactivo;
     private OyenteCasilla oyente;
+    private OyenteColocacion oyenteColocacion;
     private int hoverFila = -1;
     private int hoverColumna = -1;
     private boolean colocable;
@@ -125,6 +132,23 @@ public class TableroPanel extends JComponent {
         this.oyente = oyente;
     }
 
+    public void setOyenteColocacion(OyenteColocacion oyenteColocacion) {
+        this.oyenteColocacion = oyenteColocacion;
+    }
+
+    private void notificarColocacion(TableroVista.Nave nave) {
+        if (oyenteColocacion == null) {
+            return;
+        }
+        TableroVista.Nave[] naves = tablero.getNaves();
+        for (int i = 0; i < naves.length; i++) {
+            if (naves[i] == nave) {
+                oyenteColocacion.alColocar(i, nave.getFila(), nave.getColumna(), nave.isHorizontal());
+                return;
+            }
+        }
+    }
+
     /* permite arrastrar los barcos para posicionarlos (clic derecho para girarlos) */
     public void setColocable(boolean colocable) {
         this.colocable = colocable;
@@ -145,7 +169,9 @@ public class TableroPanel extends JComponent {
             return;
         }
         if (SwingUtilities.isRightMouseButton(e)) {
-            tablero.rotar(nave);
+            if (tablero.rotar(nave)) {
+                notificarColocacion(nave);
+            }
             repaint();
         } else if (SwingUtilities.isLeftMouseButton(e)) {
             arrastrada = nave;
@@ -172,8 +198,8 @@ public class TableroPanel extends JComponent {
     }
 
     private void soltar() {
-        if (destinoValido) {
-            tablero.colocar(arrastrada, destinoFila, destinoColumna, arrastrada.isHorizontal());
+        if (destinoValido && tablero.colocar(arrastrada, destinoFila, destinoColumna, arrastrada.isHorizontal())) {
+            notificarColocacion(arrastrada);
         }
         arrastrada = null;
         setCursor(Cursor.getDefaultCursor());

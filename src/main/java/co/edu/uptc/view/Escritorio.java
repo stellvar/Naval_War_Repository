@@ -29,16 +29,16 @@ public class Escritorio extends JLayeredPane implements Navegador {
     private final Map<IdPantalla, Pantalla> pantallas = new EnumMap<>(IdPantalla.class);
     private Pantalla actual;
 
-    public Escritorio() {
+    public Escritorio(ControladorVista ctrl) {
         setOpaque(true);
         setBackground(new Color(0x07254A));
-        pantallas.put(IdPantalla.MENU, new PantallaMenu(this));
-        pantallas.put(IdPantalla.GUIA, new PantallaGuia(this));
-        pantallas.put(IdPantalla.OPCIONES, new PantallaOpciones(this));
-        pantallas.put(IdPantalla.ESTADISTICAS, new PantallaEstadisticas(this));
-        pantallas.put(IdPantalla.SELECCION, new PantallaSeleccionJugadores(this));
-        pantallas.put(IdPantalla.PERFIL, new PantallaPersonalizar(this));
-        pantallas.put(IdPantalla.JUEGO, new PantallaJuego(this));
+        pantallas.put(IdPantalla.MENU, new PantallaMenu(this, ctrl));
+        pantallas.put(IdPantalla.GUIA, new PantallaGuia(this, ctrl));
+        pantallas.put(IdPantalla.OPCIONES, new PantallaOpciones(this, ctrl));
+        pantallas.put(IdPantalla.ESTADISTICAS, new PantallaEstadisticas(this, ctrl));
+        pantallas.put(IdPantalla.SELECCION, new PantallaSeleccionJugadores(this, ctrl));
+        pantallas.put(IdPantalla.PERFIL, new PantallaPersonalizar(this, ctrl));
+        pantallas.put(IdPantalla.JUEGO, new PantallaJuego(this, ctrl));
         for (Map.Entry<IdPantalla, Pantalla> e : pantallas.entrySet()) {
             contenedor.add(e.getValue(), e.getKey().name());
         }

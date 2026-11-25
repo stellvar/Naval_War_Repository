@@ -1,9 +1,5 @@
 package co.edu.uptc.view.componentes;
 
-import co.edu.uptc.view.Tema;
-
-import javax.swing.Icon;
-import javax.swing.JButton;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -15,16 +11,21 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
-import java.awt.geom.RoundRectangle2D;
+
+import javax.swing.Icon;
+import javax.swing.JButton;
+
+import co.edu.uptc.view.Tema;
 
 
 public class BotonMarino extends JButton {
 
-    public enum Forma { CHAFLAN, PILDORA }
+    public enum Forma { CHAFLAN }
 
     private final Forma forma;
     private final Icon icono;
     private boolean separador;
+    private boolean principal;
 
     public BotonMarino(String texto, Icon icono, Forma forma, int ancho, int alto, float tamFuente) {
         super(texto);
@@ -49,10 +50,15 @@ public class BotonMarino extends JButton {
         return this;
     }
 
-    private Shape forma(double w, double h) {
-        if (forma == Forma.PILDORA) {
-            return new RoundRectangle2D.Double(1, 1, w - 2, h - 2, h - 2, h - 2);
-        }
+    /* destaca el botón como la acción principal de la pantalla o ventana */
+    public BotonMarino principal() {
+        this.principal = true;
+        setForeground(Tema.ACCION_TEXTO);
+        return this;
+    }
+
+    /* octogono de esquinas cortadas, compartido por todos los botones */
+    public static Shape octogono(double w, double h) {
         double c = h * 0.30;
         Path2D p = new Path2D.Double();
         p.moveTo(c, 1);
@@ -73,19 +79,20 @@ public class BotonMarino extends JButton {
         Tema.calidad(g);
         int w = getWidth();
         int h = getHeight();
-        Shape contorno = forma(w, h);
+        Shape contorno = octogono(w, h);
 
-        Color relleno = Tema.BOTON;
+        Color relleno = principal ? Tema.ACCION : Tema.BOTON;
         if (!isEnabled()) {
             relleno = new Color(4, 30, 58, 120);
         } else if (getModel().isPressed()) {
-            relleno = Tema.BOTON_PRESIONADO;
+            relleno = principal ? Tema.ACCION_PRESIONADO : Tema.BOTON_PRESIONADO;
         } else if (getModel().isRollover()) {
-            relleno = Tema.BOTON_HOVER;
+            relleno = principal ? Tema.ACCION_HOVER : Tema.BOTON_HOVER;
         }
         g.setColor(relleno);
         g.fill(contorno);
-        g.setColor(isEnabled() ? Tema.BOTON_BORDE : new Color(27, 79, 133, 90));
+        Color borde = principal ? Tema.ACCION_BORDE : Tema.BOTON_BORDE;
+        g.setColor(isEnabled() ? borde : new Color(27, 79, 133, 90));
         g.setStroke(new BasicStroke(1.5f));
         g.draw(contorno);
 

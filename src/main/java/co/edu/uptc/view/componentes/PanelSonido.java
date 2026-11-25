@@ -1,21 +1,23 @@
 package co.edu.uptc.view.componentes;
 
-import co.edu.uptc.view.Audio;
-import co.edu.uptc.view.Tema;
-import co.edu.uptc.view.Textos;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Font;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Font;
 
-/* de momento no nada ni se pueden cambiar los valores*/
+import co.edu.uptc.view.Audio;
+import co.edu.uptc.view.ControladorVista;
+import co.edu.uptc.view.Tema;
+import co.edu.uptc.view.Textos;
+
+/* configuración de sonido: aplica el cambio al audio y lo entrega al controlador para guardarlo */
 public class PanelSonido extends JPanel {
 
-    public PanelSonido(boolean centrado) {
+    public PanelSonido(boolean centrado, ControladorVista ctrl) {
         setOpaque(false);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         float alineacion = centrado ? Component.CENTER_ALIGNMENT : Component.LEFT_ALIGNMENT;
@@ -27,17 +29,20 @@ public class PanelSonido extends JPanel {
         add(titulo);
         add(Box.createVerticalStrut(22));
 
-        ControlVolumen musica = new ControlVolumen(Textos.t("sonido.musica"), 50, centrado, valor -> {
-            new ControlVolumen(Textos.t("sonido.musica"), 50, centrado, Audio::setVolumenMusica, () -> { });}
-                , () -> { });
+        ControlVolumen musica = new ControlVolumen(Textos.t("sonido.musica"), ctrl.getVolumenMusica(), centrado,
+                valor -> {
+                    Audio.setVolumenMusica(valor);
+                    ctrl.setVolumenMusica(valor);
+                }, ctrl::guardarConfiguracion);
         musica.setAlignmentX(alineacion);
         add(musica);
         add(Box.createVerticalStrut(12));
 
-
-        ControlVolumen efectos = new ControlVolumen(Textos.t("sonido.efectos"), 50, centrado, valor -> {
-            new ControlVolumen(Textos.t("sonido.efectos"), 50, centrado, Audio::setVolumenEfectos, () -> { });
-        }, () -> { });
+        ControlVolumen efectos = new ControlVolumen(Textos.t("sonido.efectos"), ctrl.getVolumenEfectos(), centrado,
+                valor -> {
+                    Audio.setVolumenEfectos(valor);
+                    ctrl.setVolumenEfectos(valor);
+                }, ctrl::guardarConfiguracion);
         efectos.setAlignmentX(alineacion);
         add(efectos);
         add(Box.createVerticalStrut(14));
@@ -48,7 +53,10 @@ public class PanelSonido extends JPanel {
         etiquetaVoz.setFont(Tema.fuente(Font.BOLD, 17));
         etiquetaVoz.setForeground(Tema.TEXTO);
         voz.add(etiquetaVoz, BorderLayout.WEST);
-        voz.add(new Interruptor(false, activa -> { }), BorderLayout.EAST);
+        voz.add(new Interruptor(ctrl.isVozDeMando(), activa -> {
+            ctrl.setVozDeMando(activa);
+            ctrl.guardarConfiguracion();
+        }), BorderLayout.EAST);
         voz.setAlignmentX(alineacion);
         add(voz);
     }
