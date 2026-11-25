@@ -1,0 +1,377 @@
+{
+  "jugador1": {
+    "nombre": "Player1",
+    "biografia": "",
+    "avatar": 5,
+    "resultados": []
+  },
+  "jugador2": {
+    "nombre": "Computador",
+    "biografia": "",
+    "avatar": 5,
+    "resultados": []
+  },
+  "contraComputador": true,
+  "tablero1": {
+    "portaaviones": {
+      "nombre": "PortaAviones",
+      "tamano": 5,
+      "vida": 5,
+      "fila": 7,
+      "columna": 1,
+      "horizontal": true,
+      "impactos": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "acorazado": {
+      "nombre": "Acorazado",
+      "tamano": 4,
+      "vida": 4,
+      "fila": 1,
+      "columna": 1,
+      "horizontal": false,
+      "impactos": [
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "crucero": {
+      "nombre": "Crucero",
+      "tamano": 3,
+      "vida": 3,
+      "fila": 6,
+      "columna": 6,
+      "horizontal": false,
+      "impactos": [
+        false,
+        false,
+        false
+      ]
+    },
+    "destructor": {
+      "nombre": "Destructor",
+      "tamano": 2,
+      "vida": 2,
+      "fila": 1,
+      "columna": 5,
+      "horizontal": true,
+      "impactos": [
+        false,
+        false
+      ]
+    },
+    "disparos": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  "tablero2": {
+    "portaaviones": {
+      "nombre": "PortaAviones",
+      "tamano": 5,
+      "vida": 5,
+      "fila": 3,
+      "columna": 5,
+      "horizontal": true,
+      "impactos": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "acorazado": {
+      "nombre": "Acorazado",
+      "tamano": 4,
+      "vida": 3,
+      "fila": 6,
+      "columna": 5,
+      "horizontal": true,
+      "impactos": [
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    "crucero": {
+      "nombre": "Crucero",
+      "tamano": 3,
+      "vida": 3,
+      "fila": 6,
+      "columna": 4,
+      "horizontal": false,
+      "impactos": [
+        false,
+        false,
+        false
+      ]
+    },
+    "destructor": {
+      "nombre": "Destructor",
+      "tamano": 2,
+      "vida": 2,
+      "fila": 7,
+      "columna": 1,
+      "horizontal": false,
+      "impactos": [
+        false,
+        false
+      ]
+    },
+    "disparos": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  "jugadorActual": {
+    "nombre": "Player1",
+    "biografia": "",
+    "avatar": 5,
+    "resultados": []
+  }
+}

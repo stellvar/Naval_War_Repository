@@ -1,23 +1,26 @@
 package co.edu.uptc.view;
 
-import co.edu.uptc.view.componentes.Iconos;
-
-import javax.swing.JFrame;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+
+import javax.swing.JFrame;
+
+import co.edu.uptc.view.componentes.Iconos;
 
 
 public class VentanaPrincipal extends JFrame {
 
     private final Escritorio escritorio;
 
-    public VentanaPrincipal() {
+    public VentanaPrincipal(ControladorVista ctrl) {
         super("Batalla Naval");
-        escritorio = new Escritorio();
+        escritorio = new Escritorio(ctrl);
         setContentPane(escritorio);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {

@@ -1,5 +1,9 @@
 package co.edu.uptc.view.componentes;
 
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
@@ -7,11 +11,6 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 
-
-import javax.imageio.ImageIO;
-import javax.swing.Icon;
-
-import co.edu.uptc.view.Tema;
 import co.edu.uptc.view.Tema;
 
 /* avatares: se cargan de src/main/resources/img/avatares/avatar_0.png ... avatar_5.png */

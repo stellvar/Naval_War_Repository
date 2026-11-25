@@ -1,0 +1,16 @@
+{
+  "listaJugadores": [
+    {
+      "nombre": "Player1",
+      "biografia": "",
+      "avatar": 5,
+      "resultados": []
+    },
+    {
+      "nombre": "Player2",
+      "biografia": "",
+      "avatar": 5,
+      "resultados": []
+    }
+  ]
+}

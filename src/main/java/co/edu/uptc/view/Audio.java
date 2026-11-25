@@ -1,8 +1,13 @@
 package co.edu.uptc.view;
 
-import javax.sound.sampled.*;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineEvent;
 
 public final class Audio {
 
@@ -27,7 +32,16 @@ public final class Audio {
     }
 
     public static void efectoClic() {
-        try (InputStream in = Audio.class.getResourceAsStream("/audio/click.wav")) {
+        reproducirEfecto("/audio/click.wav");
+    }
+
+    /* sonido de explosión cuando un disparo golpea un barco (usa el volumen de "efectos de sonido") */
+    public static void efectoExplosion() {
+        reproducirEfecto("/audio/explosion.wav");
+    }
+
+    private static void reproducirEfecto(String ruta) {
+        try (InputStream in = Audio.class.getResourceAsStream(ruta)) {
             if (in == null) return;
             AudioInputStream ais = AudioSystem.getAudioInputStream(new BufferedInputStream(in));
             Clip clip = AudioSystem.getClip();
