@@ -10,7 +10,18 @@
       "nombre": "Player2",
       "biografia": "",
       "avatar": 5,
-      "resultados": []
+      "resultados": [
+        0
+      ]
+    },
+    {
+      "nombre": "Voux",
+      "biografia": "",
+      "avatar": 5,
+      "resultados": [
+        2,
+        33
+      ]
     }
   ]
 }

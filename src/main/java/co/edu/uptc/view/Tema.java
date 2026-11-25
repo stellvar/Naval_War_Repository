@@ -21,27 +21,25 @@ public final class Tema {
     public static final Color BOTON_HOVER = new Color(0x0A3560);
     public static final Color BOTON_PRESIONADO = new Color(0x021426);
     public static final Color BOTON_BORDE = new Color(0x1B4F85);
-    /* velo estándar de todas las ventanas emergentes: oscuro y translúcido, deja ver lo que hay debajo */
+    /* velo estándar de todas las ventanas emergentes: oscuro y translúcido*/
     public static final Color VELO_OSCURO = new Color(3, 14, 30, 180);
-    /* velo opaco: tapa por completo la pantalla (cambio de turno, para no ver la flota del rival)
-       y deja ver en su lugar el fondo predeterminado oscurecido */
+    /* velo opaco: tapa por completo la pantalla */
     public static final Color VELO_TAPADO = new Color(3, 14, 30, 255);
-    /* panel de las ventanas emergentes: un tono más claro que el velo */
+    /* panel de las ventanas emergentes*/
     public static final Color PANEL_MODAL = new Color(9, 44, 84);
     public static final Color CAMPO = new Color(0x8A96A6);
     public static final Color CAMPO_TEXTO = new Color(0x08203A);
     public static final Color IMPACTO = new Color(0xE11D2E);
     public static final Color ERROR = new Color(0xFFA3AD);
 
-    /* botones principales (la acción que queremos que el usuario elija: jugar, continuar, listo...):
-       estilo invertido del botón regular, fondo claro y contenido oscuro */
+    /* botones principales  */
     public static final Color ACCION = CIAN;
     public static final Color ACCION_HOVER = TEXTO;
     public static final Color ACCION_PRESIONADO = CIAN.darker();
     public static final Color ACCION_BORDE = TEXTO;
     public static final Color ACCION_TEXTO = BOTON;
 
-    /* fondo circular de los botones de icono (engranaje en partida) */
+    /* fondo circular de los botones de icono  */
     public static final Color CIRCULO = new Color(2, 14, 32, 150);
     public static final Color CIRCULO_HOVER = new Color(10, 45, 85, 200);
     public static final Color CIRCULO_ACTIVO = new Color(4, 30, 58, 245);

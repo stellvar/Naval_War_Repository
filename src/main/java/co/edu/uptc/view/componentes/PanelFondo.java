@@ -11,7 +11,6 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-/* panel que pinta la imagen de fondo (/img/fondo.jpg) */
 public class PanelFondo extends JPanel {
 
     private static BufferedImage original;
@@ -40,7 +39,6 @@ public class PanelFondo extends JPanel {
         g.dispose();
     }
 
-    /* dibuja el fondo predeterminado (también lo usa el velo opaco de las ventanas emergentes) */
     public static void pintar(Graphics2D g, int w, int h) {
         if (original == null) {
             g.setPaint(new GradientPaint(0, 0, new Color(0x0B3A78), 0, h, new Color(0x041A38)));
@@ -50,7 +48,6 @@ public class PanelFondo extends JPanel {
         }
     }
 
-    /* escala centrada */
     private static synchronized BufferedImage escalada(int w, int h) {
         if (cache != null && cache.getWidth() == w && cache.getHeight() == h) {
             return cache;

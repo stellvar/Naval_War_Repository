@@ -7,7 +7,7 @@ public final class TableroVista {
     public static final int AGUA = 1;
     public static final int TOCADO = 2;
 
-    /* un barco dibujado  */
+    /* un barco  */
     public static final class Nave {
         private final int tamano;
         private int fila;
@@ -113,7 +113,6 @@ public final class TableroVista {
         return restantes;
     }
 
-    /* indica si la nave cabe en la posicion dada sin salirse ni chocar con otra */
     public boolean puedeColocar(Nave nave, int fila, int columna, boolean horizontal) {
         int filaFinal = horizontal ? fila : fila + nave.getTamano() - 1;
         int columnaFinal = horizontal ? columna + nave.getTamano() - 1 : columna;
@@ -132,7 +131,6 @@ public final class TableroVista {
         return true;
     }
 
-    /* mueve la nave a la posicion dada si es valida */
     public boolean colocar(Nave nave, int fila, int columna, boolean horizontal) {
         if (!puedeColocar(nave, fila, columna, horizontal)) {
             return false;
@@ -141,7 +139,6 @@ public final class TableroVista {
         return true;
     }
 
-    /* gira la nave sobre su primera casilla si hay espacio */
     public boolean rotar(Nave nave) {
         return colocar(nave, nave.getFila(), nave.getColumna(), !nave.isHorizontal());
     }
@@ -154,7 +151,6 @@ public final class TableroVista {
         return this;
     }
 
-    /* tablero ejemplo aliado */
     public static TableroVista demoPropio() {
         return new TableroVista(new Nave[]{
                 new Nave(5, 1, 1, true, 3),
@@ -164,7 +160,6 @@ public final class TableroVista {
         }).disparar(new int[][]{{1, 4}, {3, 7}, {4, 7}, {0, 0}, {6, 6}, {8, 8}, {9, 2}});
     }
 
-    /*tablero ejemplo enemigo */
     public static TableroVista demoEnemigo() {
         return new TableroVista(new Nave[]{
                 new Nave(5, 1, 1, true, 0, 1, 2, 3, 4),

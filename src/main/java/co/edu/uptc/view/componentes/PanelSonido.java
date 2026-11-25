@@ -14,7 +14,6 @@ import co.edu.uptc.view.ControladorVista;
 import co.edu.uptc.view.Tema;
 import co.edu.uptc.view.Textos;
 
-/* configuración de sonido: aplica el cambio al audio y lo entrega al controlador para guardarlo */
 public class PanelSonido extends JPanel {
 
     public PanelSonido(boolean centrado, ControladorVista ctrl) {
@@ -54,6 +53,7 @@ public class PanelSonido extends JPanel {
         etiquetaVoz.setForeground(Tema.TEXTO);
         voz.add(etiquetaVoz, BorderLayout.WEST);
         voz.add(new Interruptor(ctrl.isVozDeMando(), activa -> {
+            Audio.setVozDeMando(activa);
             ctrl.setVozDeMando(activa);
             ctrl.guardarConfiguracion();
         }), BorderLayout.EAST);

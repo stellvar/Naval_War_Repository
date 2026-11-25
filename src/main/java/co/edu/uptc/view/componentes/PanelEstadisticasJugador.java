@@ -14,7 +14,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 
-/* ventana emergente con avatar, nombre, biografia y estadisticas de un jugador */
 public class PanelEstadisticasJugador extends TarjetaModal {
 
     private static final int ANCHO = 360;

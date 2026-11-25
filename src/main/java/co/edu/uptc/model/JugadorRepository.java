@@ -34,7 +34,7 @@ public class JugadorRepository {
         return misJugadores.buscarJugador(nombre);
     }
 
-    public boolean registrarVictoria(String nombre, int turnos) {
+    private boolean registrarVictoria(String nombre, int turnos) {
         Jugador jugador = misJugadores.buscarJugador(nombre);
         if (jugador == null) {
             return false;
@@ -44,7 +44,7 @@ public class JugadorRepository {
         return true;
     }
 
-    public boolean registrarDerrota(String nombre) {
+    private boolean registrarDerrota(String nombre) {
         Jugador jugador = misJugadores.buscarJugador(nombre);
         if (jugador == null) {
             return false;
@@ -52,10 +52,6 @@ public class JugadorRepository {
         jugador.registrarDerrota();
         persistir();
         return true;
-    }
-
-    public ArrayList<Jugador> getListaJugadores() {
-        return misJugadores.getListaJugadores();
     }
 
     public ArrayList<Jugador> getRanking() {
@@ -66,16 +62,16 @@ public class JugadorRepository {
         if (!partida.hayGanador()) {
             return false;
         }
-        Jugador ganador = partida.getGanador();
-        Jugador perdedor = partida.getPerdedor();
+        String ganador = partida.getNombreGanador();
+        String perdedor = partida.getNombrePerdedor();
         int turnos = partida.getTurnos(ganador);
-        boolean victoriaOk = esComputador(ganador) || registrarVictoria(ganador.getNombre(), turnos);
-        boolean derrotaOk = esComputador(perdedor) || registrarDerrota(perdedor.getNombre());
+        boolean victoriaOk = esComputador(ganador) || registrarVictoria(ganador, turnos);
+        boolean derrotaOk = esComputador(perdedor) || registrarDerrota(perdedor);
         return victoriaOk && derrotaOk;
     }
 
-    private static boolean esComputador(Jugador jugador) {
-        return jugador.getNombre().equalsIgnoreCase(Partida.nombreComputador);
+    private static boolean esComputador(String nombre) {
+        return nombre.equalsIgnoreCase(Partida.NOMBRE_COMPUTADOR);
     }
 
     private void persistir() {

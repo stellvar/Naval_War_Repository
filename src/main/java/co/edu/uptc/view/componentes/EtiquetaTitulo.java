@@ -12,7 +12,6 @@ import javax.swing.SwingConstants;
 
 import co.edu.uptc.view.Tema;
 
-/* ("TU FLOTA" / "CAMPO ENEMIGO"). */
 public class EtiquetaTitulo extends JLabel {
 
     private final EstiloFlota estilo;

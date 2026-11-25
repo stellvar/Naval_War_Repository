@@ -45,7 +45,6 @@ public class BotonIcono extends JButton {
         } else if (getModel().isRollover()) {
             fondo = Tema.CIRCULO_HOVER;
         }
-        /* círculo perfecto aunque el layout estire el botón */
         int d = Math.min(w, h);
         g.setColor(fondo);
         g.fillOval((w - d) / 2, (h - d) / 2, d, d);

@@ -14,7 +14,6 @@ import javax.swing.JToggleButton;
 
 import co.edu.uptc.view.Tema;
 
-/* cuadrícula de avatares seleccionables. */
 public class SelectorAvatar extends JPanel {
 
     private final JToggleButton[] botones = new JToggleButton[Avatares.CANTIDAD];

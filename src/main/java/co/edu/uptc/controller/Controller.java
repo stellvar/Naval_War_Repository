@@ -3,12 +3,14 @@ package co.edu.uptc.controller;
 import co.edu.uptc.model.Barco;
 import co.edu.uptc.model.Configuracion;
 import co.edu.uptc.model.ConfiguracionRepository;
+import co.edu.uptc.model.Impacto;
 import co.edu.uptc.model.Jugador;
 import co.edu.uptc.model.JugadorRepository;
 import co.edu.uptc.model.Partida;
 import co.edu.uptc.model.PartidaRepository;
 import co.edu.uptc.model.Tablero;
 import co.edu.uptc.view.ControladorVista;
+import co.edu.uptc.view.ErrorPerfil;
 import co.edu.uptc.view.EstadisticasJugadorVista;
 import co.edu.uptc.view.FilaRankingVista;
 import co.edu.uptc.view.MainVista;
@@ -19,11 +21,7 @@ import co.edu.uptc.view.componentes.TableroVista;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * Controlador MVC: unico punto de contacto entre el modelo (Partida, Tablero,
- * repositorios) y la vista (pantallas Swing). La vista lo usa a traves de
- * ControladorVista y el modelo no sabe nada de ninguno de los dos.
- */
+
 public class Controller implements ControladorVista {
 
     private enum Fase { SIN_PARTIDA, COLOCANDO, COMBATE, TERMINADA }
@@ -35,16 +33,12 @@ public class Controller implements ControladorVista {
     private Partida partida;
     private Fase fase = Fase.SIN_PARTIDA;
 
-    /* jugador (1 o 2) que esta colocando su flota */
     private int colocando = 1;
-    /* jugador (1 o 2) que tiene el dispositivo durante el combate */
     private int vista = 1;
-    /* el jugador fallo (agua) y falta que pulse TERMINAR TURNO */
     private boolean turnoTerminado;
     private boolean relevoPendiente;
     private boolean resultadoRegistrado;
 
-    /* seleccion de jugadores antes de crear la partida */
     private int cantidadSeleccion;
     private final Jugador[] elegidos = new Jugador[2];
     private final PerfilVista[] recordados = new PerfilVista[2];
@@ -53,10 +47,9 @@ public class Controller implements ControladorVista {
         this.jugadores = new JugadorRepository();
         this.partidas = new PartidaRepository();
         this.configuraciones = new ConfiguracionRepository();
-        init();
     }
 
-    public void init() {
+    public void iniciar() {
         MainVista.iniciar(this);
     }
 
@@ -119,21 +112,21 @@ public class Controller implements ControladorVista {
     }
 
     @Override
-    public String guardarPerfil(int numero, String nombre, String biografia, int avatar) {
+    public ErrorPerfil guardarPerfil(int numero, String nombre, String biografia, int avatar) {
         if (!indiceValido(numero)) {
-            return "perfil.errorNombre";
+            return ErrorPerfil.NOMBRE_NO_VALIDO;
         }
         String limpio = nombre == null ? "" : nombre.trim();
-        if (limpio.isEmpty() || limpio.equalsIgnoreCase(Partida.nombreComputador)) {
-            return "perfil.errorNombre";
+        if (limpio.isEmpty() || limpio.equalsIgnoreCase(Partida.NOMBRE_COMPUTADOR)) {
+            return ErrorPerfil.NOMBRE_NO_VALIDO;
         }
         boolean eligiendoDos = cantidadSeleccion == 2 && numero == 2;
         if (eligiendoDos && elegidos[0] != null && elegidos[0].getNombre().equalsIgnoreCase(limpio)) {
-            return "perfil.errorIguales";
+            return ErrorPerfil.NOMBRES_IGUALES;
         }
         Jugador jugador = jugadores.guardarJugador(limpio, biografia, avatar);
         if (jugador == null) {
-            return "perfil.errorNombre";
+            return ErrorPerfil.NOMBRE_NO_VALIDO;
         }
         recordados[numero - 1] = new PerfilVista(jugador.getNombre(), jugador.getBiografia(), jugador.getAvatar());
         if (cantidadSeleccion > 0) {
@@ -156,8 +149,8 @@ public class Controller implements ControladorVista {
         }
         try {
             partida = cantidadSeleccion == 1
-                    ? new Partida(elegidos[0])
-                    : new Partida(elegidos[0], elegidos[1]);
+                    ? new Partida(elegidos[0].getNombre())
+                    : new Partida(elegidos[0].getNombre(), elegidos[1].getNombre());
         } catch (IllegalArgumentException e) {
             return false;
         }
@@ -264,7 +257,7 @@ public class Controller implements ControladorVista {
     @Override
     public boolean ganoElComputador() {
         return partida != null && partida.isContraComputador() && partida.hayGanador()
-                && partida.getNombreGanador().equalsIgnoreCase(partida.getJugador2().getNombre());
+                && partida.getNombreGanador().equalsIgnoreCase(partida.getNombreJugador2());
     }
 
     @Override
@@ -273,7 +266,7 @@ public class Controller implements ControladorVista {
             return "";
         }
         int numero = fase == Fase.COLOCANDO ? colocando : vista;
-        return jugadorNumero(numero).getNombre();
+        return nombreJugador(numero);
     }
 
     @Override
@@ -282,7 +275,7 @@ public class Controller implements ControladorVista {
             return null;
         }
         relevoPendiente = false;
-        return jugadorNumero(vista).getNombre();
+        return nombreJugador(vista);
     }
 
     @Override
@@ -321,10 +314,10 @@ public class Controller implements ControladorVista {
         }
         if (colocando == 1) {
             colocando = 2;
-            return partida.getJugador2().getNombre();
+            return partida.getNombreJugador2();
         }
         iniciarCombate();
-        return partida.getJugador1().getNombre();
+        return partida.getNombreJugador1();
     }
 
     @Override
@@ -334,8 +327,8 @@ public class Controller implements ControladorVista {
         }
         Tablero rival = partida.getTableroRival();
         boolean[] hundidosAntes = hundidos(rival);
-        int codigo = partida.disparar(fila, columna);
-        return procesarDisparo(codigo, rival, hundidosAntes, false);
+        Impacto impacto = partida.disparar(fila, columna);
+        return procesarDisparo(impacto, rival, hundidosAntes, false);
     }
 
     @Override
@@ -360,8 +353,8 @@ public class Controller implements ControladorVista {
         }
         Tablero rival = partida.getTableroRival();
         boolean[] hundidosAntes = hundidos(rival);
-        int codigo = partida.disparoComputador();
-        return procesarDisparo(codigo, rival, hundidosAntes, true);
+        Impacto impacto = partida.disparoComputador();
+        return procesarDisparo(impacto, rival, hundidosAntes, true);
     }
 
     @Override
@@ -369,8 +362,8 @@ public class Controller implements ControladorVista {
         if (partida == null) {
             return;
         }
-        Jugador jugador1 = partida.getJugador1();
-        Jugador jugador2 = partida.getJugador2();
+        String jugador1 = partida.getNombreJugador1();
+        String jugador2 = partida.getNombreJugador2();
         boolean contraComputador = partida.isContraComputador();
         partida = contraComputador ? new Partida(jugador1) : new Partida(jugador1, jugador2);
         prepararColocacion();
@@ -398,20 +391,20 @@ public class Controller implements ControladorVista {
         guardar();
     }
 
-    private ResultadoDisparo procesarDisparo(int codigo, Tablero rival, boolean[] hundidosAntes,
+    private ResultadoDisparo procesarDisparo(Impacto impacto, Tablero rival, boolean[] hundidosAntes,
                                              boolean delComputador) {
         ResultadoDisparo resultado;
-        switch (codigo) {
-            case Tablero.agua:
+        switch (impacto) {
+            case AGUA:
                 resultado = ResultadoDisparo.de(ResultadoDisparo.Tipo.AGUA);
                 if (!delComputador) {
                     turnoTerminado = true;
                 }
                 break;
-            case Tablero.tocado:
+            case TOCADO:
                 resultado = ResultadoDisparo.de(ResultadoDisparo.Tipo.TOCADO);
                 break;
-            case Tablero.hundido:
+            case HUNDIDO:
                 resultado = new ResultadoDisparo(ResultadoDisparo.Tipo.HUNDIDO,
                         tamanoRecienHundido(rival, hundidosAntes));
                 break;
@@ -462,8 +455,8 @@ public class Controller implements ControladorVista {
         return 0;
     }
 
-    private Jugador jugadorNumero(int numero) {
-        return numero == 1 ? partida.getJugador1() : partida.getJugador2();
+    private String nombreJugador(int numero) {
+        return numero == 1 ? partida.getNombreJugador1() : partida.getNombreJugador2();
     }
 
     private Tablero tableroDe(int numero) {
@@ -475,10 +468,9 @@ public class Controller implements ControladorVista {
     }
 
     private int numeroJugadorActual() {
-        return partida.getNombreTurnoActual().equalsIgnoreCase(partida.getJugador1().getNombre()) ? 1 : 2;
+        return partida.getNombreTurnoActual().equalsIgnoreCase(partida.getNombreJugador1()) ? 1 : 2;
     }
 
-    /* traduce un Tablero del modelo al TableroVista que dibuja la vista */
     private static TableroVista aVista(Tablero tablero) {
         Barco[] barcos = tablero.getBarcos();
         TableroVista.Nave[] naves = new TableroVista.Nave[barcos.length];
@@ -501,10 +493,14 @@ public class Controller implements ControladorVista {
             naves[i] = new TableroVista.Nave(barco.getTamano(), barco.getFila(), barco.getColumna(),
                     barco.isHorizontal(), segmentos);
         }
-        int[][] disparos = new int[Tablero.tamano][Tablero.tamano];
-        for (int f = 0; f < Tablero.tamano; f++) {
-            for (int c = 0; c < Tablero.tamano; c++) {
-                disparos[f][c] = tablero.getDisparo(f, c);
+        int[][] disparos = new int[Tablero.TAMANO][Tablero.TAMANO];
+        for (int f = 0; f < Tablero.TAMANO; f++) {
+            for (int c = 0; c < Tablero.TAMANO; c++) {
+                if (tablero.sinDisparar(f, c)) {
+                    disparos[f][c] = TableroVista.SIN_DISPARAR;
+                } else {
+                    disparos[f][c] = tablero.esImpacto(f, c) ? TableroVista.TOCADO : TableroVista.AGUA;
+                }
             }
         }
         return TableroVista.crear(naves, disparos);

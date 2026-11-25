@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 
 import co.edu.uptc.view.Tema;
 
-/* Panel de fondo azul */
 public class PanelTranslucido extends JPanel {
 
     private final int arco;

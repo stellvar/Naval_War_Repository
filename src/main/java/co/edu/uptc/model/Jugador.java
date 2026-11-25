@@ -3,8 +3,8 @@ package co.edu.uptc.model;
 import java.util.ArrayList;
 
 public class Jugador {
-    public static final int cantidadAvatares = 6;
-    public static final int avatarPorDefecto = 5;
+    public static final int CANTIDAD_AVATARES = 6;
+    public static final int AVATAR_POR_DEFECTO = 5;
 
     private static final int DERROTA = 0;
 
@@ -20,11 +20,11 @@ public class Jugador {
     public Jugador(String nombre, String biografia, int avatar) {
         this.nombre = nombre;
         this.biografia = biografia == null ? "" : biografia;
-        this.avatar = avatarValido(avatar) ? avatar : avatarPorDefecto;
+        this.avatar = avatarValido(avatar) ? avatar : AVATAR_POR_DEFECTO;
     }
 
     private static boolean avatarValido(int avatar) {
-        return avatar >= 0 && avatar < cantidadAvatares;
+        return avatar >= 0 && avatar < CANTIDAD_AVATARES;
     }
 
     public void registrarVictoria(int turnos) {

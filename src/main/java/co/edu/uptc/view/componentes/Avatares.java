@@ -13,7 +13,6 @@ import javax.swing.Icon;
 
 import co.edu.uptc.view.Tema;
 
-/* avatares: se cargan de src/main/resources/img/avatares/avatar_0.png ... avatar_5.png */
 public final class Avatares {
 
     public static final int CANTIDAD = 6;

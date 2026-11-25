@@ -31,7 +31,6 @@ public class CampoRedondeado extends JTextField {
         limitar(this, maxCaracteres);
     }
 
-    /* limite de caracteres */
     static void limitar(JTextComponent componente, int max) {
         ((AbstractDocument) componente.getDocument()).setDocumentFilter(new DocumentFilter() {
             @Override

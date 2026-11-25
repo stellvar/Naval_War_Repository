@@ -11,14 +11,6 @@ public class Jugadores {
         this.listaJugadores = new ArrayList<>();
     }
 
-    public ArrayList<Jugador> getListaJugadores() {
-        return listaJugadores;
-    }
-
-    public void agregarJugador(Jugador jugador) {
-        listaJugadores.add(jugador);
-    }
-
     public Jugador buscarJugador(String nombre) {
         if (nombre == null) {
             return null;
@@ -31,19 +23,18 @@ public class Jugadores {
         return null;
     }
 
-
     public Jugador guardarJugador(String nombre, String biografia, int avatar) {
         if (nombre == null || nombre.trim().isEmpty()) {
             return null;
         }
         String limpio = nombre.trim();
-        if (limpio.equalsIgnoreCase(Partida.nombreComputador)) {
+        if (limpio.equalsIgnoreCase(Partida.NOMBRE_COMPUTADOR)) {
             return null;
         }
         Jugador jugador = buscarJugador(limpio);
         if (jugador == null) {
             jugador = new Jugador(limpio, biografia, avatar);
-            agregarJugador(jugador);
+            listaJugadores.add(jugador);
         } else {
             jugador.setBiografia(biografia);
             jugador.setAvatar(avatar);

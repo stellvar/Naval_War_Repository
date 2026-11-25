@@ -27,7 +27,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-/* configuración de sonido, perfil e idioma*/
+
 public class PantallaOpciones extends Pantalla {
 
     public PantallaOpciones(Navegador nav, ControladorVista ctrl) {
@@ -54,8 +54,7 @@ public class PantallaOpciones extends Pantalla {
         panel.add(columnaSocial(), c);
         add(centrado(panel, 12), BorderLayout.CENTER);
 
-        BotonMarino menu = new BotonMarino(Textos.t("comun.menu"), Iconos.de(Iconos.Tipo.ANCLA, 28),
-                BotonMarino.Forma.CHAFLAN, 300, 58, 22);
+        BotonMarino menu = BotonMarino.estandar(Textos.t("comun.menu"), Iconos.de(Iconos.Tipo.ANCLA, 28));
         menu.addActionListener(e -> nav.ir(IdPantalla.MENU));
         add(new BarraInferior(null, menu, null), BorderLayout.SOUTH);
     }

@@ -15,7 +15,6 @@ import javax.swing.JButton;
 
 import co.edu.uptc.view.Tema;
 
-/* icono arriba y texto abajo */
 public class OpcionIcono extends JButton {
 
     private final Icon icono;

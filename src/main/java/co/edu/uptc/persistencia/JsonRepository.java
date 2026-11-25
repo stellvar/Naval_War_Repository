@@ -8,6 +8,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class JsonRepository<T> {
 
@@ -28,8 +30,16 @@ public class JsonRepository<T> {
         if (padre != null && !padre.exists()) {
             padre.mkdirs();
         }
-        try (Writer writer = new FileWriter(archivo)) {
+        /* tmp para evitar corrupcion */
+        File temporal = new File(archivo.getPath() + ".tmp");
+        try (Writer writer = new FileWriter(temporal)) {
             gson.toJson(data, writer);
+        } catch (Exception e) {
+            System.err.println("Error al guardar " + archivo + ": " + e.getMessage());
+            return false;
+        }
+        try {
+            Files.move(temporal.toPath(), archivo.toPath(), StandardCopyOption.REPLACE_EXISTING);
             return true;
         } catch (Exception e) {
             System.err.println("Error al guardar " + archivo + ": " + e.getMessage());

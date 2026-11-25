@@ -22,7 +22,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 
-/* 1 jugador (contra el computador) o 2 jugadores */
+
 public class PantallaSeleccionJugadores extends Pantalla {
 
     private int cantidad = 1;
@@ -61,8 +61,8 @@ public class PantallaSeleccionJugadores extends Pantalla {
         seleccionar(1);
         add(centrado(panel, 24), BorderLayout.CENTER);
 
-        BotonMarino jugar = new BotonMarino(Textos.t("comun.jugar"), Iconos.de(Iconos.Tipo.JUGAR, 28, Tema.ACCION_TEXTO),
-                BotonMarino.Forma.CHAFLAN, 270, 52, 20).principal();
+        BotonMarino jugar = BotonMarino.estandar(Textos.t("comun.jugar"),
+                Iconos.de(Iconos.Tipo.JUGAR, 28, Tema.ACCION_TEXTO)).principal();
         jugar.addActionListener(e -> continuar());
         add(new BarraInferior(null, jugar, null), BorderLayout.SOUTH);
     }

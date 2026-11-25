@@ -26,10 +26,6 @@ public class ControlVolumen extends JPanel {
 
     private final JSlider deslizador;
 
-    /*
-     * alCambiar se llama con cada cambio de valor
-     * alSoltar  se llama al soltar el deslizador
-     */
     public ControlVolumen(String titulo, int valor, boolean centrado, IntConsumer alCambiar, Runnable alSoltar) {
         super(new BorderLayout(0, 6));
         setOpaque(false);
@@ -63,7 +59,6 @@ public class ControlVolumen extends JPanel {
         return deslizador.getValue();
     }
 
-    /* deslizador pintado */
     private static final class FinoUI extends BasicSliderUI {
 
         FinoUI(JSlider slider) {

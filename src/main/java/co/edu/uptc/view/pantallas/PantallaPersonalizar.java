@@ -2,6 +2,7 @@ package co.edu.uptc.view.pantallas;
 
 import co.edu.uptc.view.IdPantalla;
 import co.edu.uptc.view.ControladorVista;
+import co.edu.uptc.view.ErrorPerfil;
 import co.edu.uptc.view.Navegador;
 import co.edu.uptc.view.PerfilVista;
 import co.edu.uptc.view.Tema;
@@ -28,7 +29,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-/*(Jugador 1 y Jugador 2): nombre de perfil, biografia y avatar */
+
 public class PantallaPersonalizar extends Pantalla {
 
     private int numero = 1;
@@ -111,11 +112,10 @@ public class PantallaPersonalizar extends Pantalla {
         panel.add(error, c);
         add(centrado(panel, 4), BorderLayout.CENTER);
 
-        BotonMarino menu = new BotonMarino(Textos.t("comun.menu"), Iconos.de(Iconos.Tipo.ANCLA, 28),
-                BotonMarino.Forma.CHAFLAN, 244, 52, 20);
+        BotonMarino menu = BotonMarino.estandar(Textos.t("comun.menu"), Iconos.de(Iconos.Tipo.ANCLA, 28));
         menu.addActionListener(e -> nav.ir(IdPantalla.MENU));
-        BotonMarino guardar = new BotonMarino(Textos.t("comun.guardar"), Iconos.de(Iconos.Tipo.MARCADOR, 28, Tema.ACCION_TEXTO),
-                BotonMarino.Forma.CHAFLAN, 244, 52, 20).principal();
+        BotonMarino guardar = BotonMarino.estandar(Textos.t("comun.guardar"),
+                Iconos.de(Iconos.Tipo.MARCADOR, 28, Tema.ACCION_TEXTO)).principal();
         guardar.addActionListener(e -> guardar());
         add(new BarraInferior(menu, null, guardar), BorderLayout.SOUTH);
     }
@@ -134,9 +134,9 @@ public class PantallaPersonalizar extends Pantalla {
         if (nombre.isEmpty()) {
             nombre = "Player" + numero;
         }
-        String clave = ctrl.guardarPerfil(numero, nombre, areaBio.getTexto(), selector.getSeleccionado());
-        if (clave != null) {
-            error.setText(Textos.t(clave));
+        ErrorPerfil fallo = ctrl.guardarPerfil(numero, nombre, areaBio.getTexto(), selector.getSeleccionado());
+        if (fallo != null) {
+            error.setText(Textos.t(fallo.getClave()));
             return;
         }
         error.setText(" ");

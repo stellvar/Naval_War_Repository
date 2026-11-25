@@ -16,7 +16,6 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 
-/* "BATALLA NAVAL": JUGAR, OPCIONES, ESTADÍSTICAS, GUÍA y SALIR. */
 public class PantallaMenu extends Pantalla {
 
     public PantallaMenu(Navegador nav, ControladorVista ctrl) {
@@ -58,7 +57,6 @@ public class PantallaMenu extends Pantalla {
         return boton;
     }
 
-    /* ventana de partida guardada */
     private void alJugar() {
         if (!ctrl.hayPartidaGuardada()) {
             nav.ir(IdPantalla.SELECCION);

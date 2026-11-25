@@ -16,7 +16,6 @@ import javax.swing.JComponent;
 
 import co.edu.uptc.view.Tema;
 
-/* Interruptor de encendido / apagado. */
 public class Interruptor extends JComponent {
 
     private boolean activo;

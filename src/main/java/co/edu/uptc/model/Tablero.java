@@ -3,18 +3,18 @@ package co.edu.uptc.model;
 import java.util.Random;
 
 public class Tablero {
-    public static final int tamano = 10;
-    public static final int sinDisparar = 0;
-    public static final int agua = 1;
-    public static final int tocado = 2;
-    public static final int hundido = 3;
-    public static final int invalido = -1;
+    public static final int TAMANO = 10;
+
+    private static final int SIN_DISPARAR = 0;
+    private static final int AGUA = 1;
+    private static final int TOCADO = 2;
 
     private PortaAviones portaaviones;
     private Acorazado acorazado;
     private Crucero crucero;
     private Destructor destructor;
     private int[][] disparos;
+    private transient Barco[] barcos;
     private transient Random rd;
 
     public Tablero() {
@@ -22,17 +22,19 @@ public class Tablero {
         this.acorazado = new Acorazado();
         this.crucero = new Crucero();
         this.destructor = new Destructor();
-        this.disparos = new int[tamano][tamano];
+        this.disparos = new int[TAMANO][TAMANO];
         this.rd = new Random();
     }
 
     public Barco[] getBarcos() {
-        Barco[] barcos = {portaaviones, acorazado, crucero, destructor};
+        if (barcos == null) {
+            barcos = new Barco[]{portaaviones, acorazado, crucero, destructor};
+        }
         return barcos;
     }
 
-    public boolean dentroDelTablero(int fila, int columna) {
-        return fila >= 0 && fila < tamano && columna >= 0 && columna < tamano;
+    private boolean dentroDelTablero(int fila, int columna) {
+        return fila >= 0 && fila < TAMANO && columna >= 0 && columna < TAMANO;
     }
 
     private boolean esDeEsteTablero(Barco barco) {
@@ -58,9 +60,8 @@ public class Tablero {
         if (!dentroDelTablero(fila, columna) || !dentroDelTablero(filaFinal, columnaFinal)) {
             return false;
         }
-        Barco[] barcos = getBarcos();
-        for (int i = 0; i < barcos.length; i++) {
-            if (barcos[i] != barco) {
+        for (Barco otro : getBarcos()) {
+            if (otro != barco) {
                 for (int j = 0; j < barco.getTamano(); j++) {
                     int f = fila;
                     int c = columna;
@@ -69,7 +70,7 @@ public class Tablero {
                     } else {
                         f = fila + j;
                     }
-                    if (barcos[i].ocupa(f, c)) {
+                    if (otro.ocupa(f, c)) {
                         return false;
                     }
                 }
@@ -83,17 +84,16 @@ public class Tablero {
         if (rd == null) {
             rd = new Random();
         }
-        Barco[] barcos = getBarcos();
-        for (int i = 0; i < barcos.length; i++) {
-            barcos[i].quitar();
+        for (Barco barco : getBarcos()) {
+            barco.quitar();
         }
-        for (int i = 0; i < barcos.length; i++) {
+        for (Barco barco : getBarcos()) {
             boolean colocado = false;
             while (!colocado) {
-                int fila = rd.nextInt(tamano);
-                int columna = rd.nextInt(tamano);
+                int fila = rd.nextInt(TAMANO);
+                int columna = rd.nextInt(TAMANO);
                 boolean horizontal = rd.nextBoolean();
-                colocado = colocarBarco(barcos[i], fila, columna, horizontal);
+                colocado = colocarBarco(barco, fila, columna, horizontal);
             }
         }
     }
@@ -107,32 +107,27 @@ public class Tablero {
         return true;
     }
 
-    public int recibirDisparo(int fila, int columna) {
-        if (!dentroDelTablero(fila, columna) || disparos[fila][columna] != sinDisparar) {
-            return invalido;
+    public Impacto recibirDisparo(int fila, int columna) {
+        if (!sinDisparar(fila, columna)) {
+            return Impacto.INVALIDO;
         }
         for (Barco barco : getBarcos()) {
             if (barco.ocupa(fila, columna)) {
                 barco.recibirImpacto(fila, columna);
-                disparos[fila][columna] = tocado;
-                return barco.estaHundido() ? hundido : tocado;
+                disparos[fila][columna] = TOCADO;
+                return barco.estaHundido() ? Impacto.HUNDIDO : Impacto.TOCADO;
             }
         }
-        disparos[fila][columna] = agua;
-        return agua;
+        disparos[fila][columna] = AGUA;
+        return Impacto.AGUA;
     }
 
-    public int getDisparo(int fila, int columna) {
-        return disparos[fila][columna];
+    public boolean sinDisparar(int fila, int columna) {
+        return dentroDelTablero(fila, columna) && disparos[fila][columna] == SIN_DISPARAR;
     }
 
-    public Barco getBarcoEn(int fila, int columna) {
-        for (Barco barco : getBarcos()) {
-            if (barco.ocupa(fila, columna)) {
-                return barco;
-            }
-        }
-        return null;
+    public boolean esImpacto(int fila, int columna) {
+        return disparos[fila][columna] == TOCADO;
     }
 
     public int barcosRestantes() {
@@ -151,20 +146,21 @@ public class Tablero {
 
     public int contarDisparosAgua() {
         int total = 0;
-        for (int f = 0; f < tamano; f++) {
-            for (int c = 0; c < tamano; c++) {
-                if (disparos[f][c] == agua) {
+        for (int f = 0; f < TAMANO; f++) {
+            for (int c = 0; c < TAMANO; c++) {
+                if (disparos[f][c] == AGUA) {
                     total++;
                 }
             }
         }
         return total;
     }
+
     public int[] casillaSinDisparar(Random azar) {
         int disponibles = 0;
-        for (int f = 0; f < tamano; f++) {
-            for (int c = 0; c < tamano; c++) {
-                if (disparos[f][c] == sinDisparar) {
+        for (int f = 0; f < TAMANO; f++) {
+            for (int c = 0; c < TAMANO; c++) {
+                if (disparos[f][c] == SIN_DISPARAR) {
                     disponibles++;
                 }
             }
@@ -173,24 +169,13 @@ public class Tablero {
             return null;
         }
         int elegida = azar.nextInt(disponibles);
-        for (int f = 0; f < tamano; f++) {
-            for (int c = 0; c < tamano; c++) {
-                if (disparos[f][c] == sinDisparar && elegida-- == 0) {
+        for (int f = 0; f < TAMANO; f++) {
+            for (int c = 0; c < TAMANO; c++) {
+                if (disparos[f][c] == SIN_DISPARAR && elegida-- == 0) {
                     return new int[]{f, c};
                 }
             }
         }
         return null;
-    }
-
-    public boolean tieneMismosDisparosQue(Tablero otro) {
-        for (int f = 0; f < tamano; f++) {
-            for (int c = 0; c < tamano; c++) {
-                if (disparos[f][c] != otro.disparos[f][c]) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }

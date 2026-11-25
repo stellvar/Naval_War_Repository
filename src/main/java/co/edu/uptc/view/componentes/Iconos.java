@@ -18,46 +18,38 @@ import javax.swing.Icon;
 
 import co.edu.uptc.view.Tema;
 
-/* iconos en java 2d */
 public final class Iconos {
 
     public enum Tipo { ANCLA, JUGAR, ENGRANAJE, LIBRO, SALIDA, MARCADOR, PISTOLA, PERSONA, PERSONAS, ATRAS, ALTAVOZ, BARRAS }
 
-    /* ancla rellena (sin borde) en un sistema de coordenadas de 100x100, simetrica respecto a x = 50 */
     private static final Shape ANCLA = crearAncla();
 
     private Iconos() {
     }
 
     private static Shape crearAncla() {
-        // anillo superior: circulo exterior menos el agujero interior
         Area ancla = new Area(new Ellipse2D.Double(40, 8, 20, 20));
         ancla.subtract(new Area(new Ellipse2D.Double(45.5, 13.5, 9, 9)));
 
         Path2D.Double cuerpo = new Path2D.Double();
-        // lado derecho del mastil y cepo derecho
         cuerpo.moveTo(54.5, 26);
         cuerpo.lineTo(54.5, 32);
         cuerpo.lineTo(71, 32);
         cuerpo.lineTo(71, 40);
         cuerpo.lineTo(54.5, 40);
         cuerpo.lineTo(54.5, 76);
-        // brazo derecho y punta de flecha
         cuerpo.quadTo(67, 75, 75, 62);
         cuerpo.lineTo(69, 59);
         cuerpo.lineTo(85, 50);
         cuerpo.lineTo(86, 68);
         cuerpo.lineTo(81, 65);
-        // curva inferior (cruz)
         cuerpo.quadTo(71, 83, 50, 91);
         cuerpo.quadTo(29, 83, 19, 65);
-        // brazo izquierdo y punta de flecha
         cuerpo.lineTo(14, 68);
         cuerpo.lineTo(15, 50);
         cuerpo.lineTo(31, 59);
         cuerpo.lineTo(25, 62);
         cuerpo.quadTo(33, 75, 45.5, 76);
-        // lado izquierdo del mastil y cepo izquierdo
         cuerpo.lineTo(45.5, 40);
         cuerpo.lineTo(29, 40);
         cuerpo.lineTo(29, 32);
@@ -100,8 +92,7 @@ public final class Iconos {
             }
         };
     }
-
-    /* cuadricula de trazos */
+    
     private static void dibujar(Tipo tipo, Graphics2D g) {
         switch (tipo) {
             case ANCLA -> {

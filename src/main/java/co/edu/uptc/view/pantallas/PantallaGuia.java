@@ -56,11 +56,10 @@ public class PantallaGuia extends Pantalla {
         panel.add(vistaPrevia(), BorderLayout.EAST);
         add(expandido(panel, new Insets(0, 80, 6, 80)), BorderLayout.CENTER);
 
-        BotonMarino menu = new BotonMarino(Textos.t("comun.menu"), Iconos.de(Iconos.Tipo.ANCLA, 28),
-                BotonMarino.Forma.CHAFLAN, 226, 50, 18);
+        BotonMarino menu = BotonMarino.estandar(Textos.t("comun.menu"), Iconos.de(Iconos.Tipo.ANCLA, 28));
         menu.addActionListener(e -> nav.ir(IdPantalla.MENU));
-        BotonMarino jugar = new BotonMarino(Textos.t("comun.jugar"), Iconos.de(Iconos.Tipo.PISTOLA, 28, Tema.ACCION_TEXTO),
-                BotonMarino.Forma.CHAFLAN, 226, 50, 18).principal();
+        BotonMarino jugar = BotonMarino.estandar(Textos.t("comun.jugar"),
+                Iconos.de(Iconos.Tipo.PISTOLA, 28, Tema.ACCION_TEXTO)).principal();
         jugar.addActionListener(e -> nav.ir(IdPantalla.SELECCION));
         add(new BarraInferior(menu, null, jugar), BorderLayout.SOUTH);
     }

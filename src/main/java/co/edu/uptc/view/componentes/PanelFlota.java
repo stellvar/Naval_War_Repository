@@ -17,7 +17,6 @@ import javax.swing.JComponent;
 import co.edu.uptc.view.Tema;
 import co.edu.uptc.view.Textos;
 
-/* seccion lateral del estado de la flota */
 public class PanelFlota extends JComponent {
 
     private final EstiloFlota estilo;

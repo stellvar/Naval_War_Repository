@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-/* arranque de la interfaz: lo invoca el controlador y le entrega su contrato */
+
 public final class MainVista {
 
     private MainVista() {
@@ -15,6 +15,7 @@ public final class MainVista {
             Textos.setIdioma(controlador.getIdioma());
             Audio.setVolumenMusica(controlador.getVolumenMusica());
             Audio.setVolumenEfectos(controlador.getVolumenEfectos());
+            Audio.setVozDeMando(controlador.isVozDeMando());
 
             Toolkit.getDefaultToolkit().addAWTEventListener(ev -> {
                 MouseEvent m = (MouseEvent) ev;

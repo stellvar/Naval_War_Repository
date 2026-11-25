@@ -21,7 +21,6 @@ import javax.swing.SwingConstants;
 
 import co.edu.uptc.view.Tema;
 
-/* Una fila de la tabla de estadísticas: avatar, nombre, línea guía y turnos */
 public class FilaRanking extends JPanel {
 
     private static final int ANCHO_NOMBRE = 250;
@@ -34,7 +33,6 @@ public class FilaRanking extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
     }
 
-    /* encabezado */
     public static FilaRanking encabezado(String columnaNombre, String columnaValor) {
         FilaRanking fila = new FilaRanking();
         fila.agregar(new JLabel(), 0);
@@ -53,7 +51,6 @@ public class FilaRanking extends JPanel {
         return fila;
     }
 
-    /* hace la tarjeta pulsable (cursor de mano y resaltado al pasar el raton) */
     public FilaRanking alPulsar(Runnable accion) {
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         addMouseListener(new MouseAdapter() {
@@ -115,7 +112,6 @@ public class FilaRanking extends JPanel {
         add(componente, c);
     }
 
-    /* line aguia */
     private static final class Guia extends JComponent {
         @Override
         protected void paintComponent(Graphics g0) {

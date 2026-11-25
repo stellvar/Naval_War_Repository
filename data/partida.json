@@ -31,7 +31,7 @@
     "acorazado": {
       "nombre": "Acorazado",
       "tamano": 4,
-      "vida": 4,
+      "vida": 3,
       "fila": 1,
       "columna": 1,
       "horizontal": false,
@@ -39,7 +39,7 @@
         false,
         false,
         false,
-        false
+        true
       ]
     },
     "crucero": {
@@ -96,19 +96,7 @@
         0,
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        0,
-        0,
-        0,
+        1,
         0,
         0,
         0,
@@ -117,7 +105,7 @@
         0
       ],
       [
-        0,
+        1,
         0,
         0,
         0,
@@ -130,8 +118,20 @@
       ],
       [
         0,
+        2,
         0,
         0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
         0,
         0,
         0,
@@ -223,12 +223,12 @@
     "crucero": {
       "nombre": "Crucero",
       "tamano": 3,
-      "vida": 3,
+      "vida": 2,
       "fila": 6,
       "columna": 4,
       "horizontal": false,
       "impactos": [
-        false,
+        true,
         false,
         false
       ]
@@ -312,7 +312,7 @@
         0,
         0,
         0,
-        0,
+        1,
         1,
         0,
         0,
@@ -322,8 +322,8 @@
         0,
         0,
         0,
-        0,
-        0,
+        1,
+        2,
         2,
         0,
         0,
@@ -336,7 +336,7 @@
         0,
         0,
         0,
-        0,
+        1,
         0,
         0,
         0,

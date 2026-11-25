@@ -19,8 +19,6 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 
-/* velo que deja huecos sobre los componentes seleccionables
- */
 public class SuperposicionModal extends JPanel {
 
     private Color velo = Tema.VELO_OSCURO;
@@ -104,7 +102,6 @@ public class SuperposicionModal extends JPanel {
             area.subtract(new Area(hueco));
         }
         if (velo.getAlpha() == 255) {
-            /* velo opaco: la pantalla de abajo queda tapada; en su lugar se ve el fondo predeterminado oscurecido */
             g.setClip(area);
             PanelFondo.pintar(g, getWidth(), getHeight());
             g.setColor(Tema.VELO_OSCURO);

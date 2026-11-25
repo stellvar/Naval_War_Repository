@@ -22,10 +22,6 @@ import javax.swing.SwingUtilities;
 
 import co.edu.uptc.view.Tema;
 
-/*
- * tablero 10 x 10. Se reutiliza en "TU FLOTA" (muestra los barcos)
- * Dibuja un TableroVista
- */
 public class TableroPanel extends JComponent {
 
 
@@ -33,7 +29,6 @@ public class TableroPanel extends JComponent {
         void alSeleccionar(int fila, int columna);
     }
 
-    /* se llama cuando el jugador mueve o gira un barco (colocable) */
     public interface OyenteColocacion {
         void alColocar(int indiceNave, int fila, int columna, boolean horizontal);
     }
@@ -149,7 +144,6 @@ public class TableroPanel extends JComponent {
         }
     }
 
-    /* permite arrastrar los barcos para posicionarlos (clic derecho para girarlos) */
     public void setColocable(boolean colocable) {
         this.colocable = colocable;
         if (!colocable) {

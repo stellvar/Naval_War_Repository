@@ -22,6 +22,12 @@ public class BotonMarino extends JButton {
 
     public enum Forma { CHAFLAN }
 
+
+
+    public static final int ANCHO_ESTANDAR = 300;
+    public static final int ALTO_ESTANDAR = 58;
+    public static final float FUENTE_ESTANDAR = 22;
+
     private final Forma forma;
     private final Icon icono;
     private boolean separador;
@@ -45,19 +51,21 @@ public class BotonMarino extends JButton {
         setMaximumSize(tam);
     }
 
+    public static BotonMarino estandar(String texto, Icon icono) {
+        return new BotonMarino(texto, icono, Forma.CHAFLAN, ANCHO_ESTANDAR, ALTO_ESTANDAR, FUENTE_ESTANDAR);
+    }
+
     public BotonMarino conSeparador() {
         this.separador = true;
         return this;
     }
 
-    /* destaca el botón como la acción principal de la pantalla o ventana */
     public BotonMarino principal() {
         this.principal = true;
         setForeground(Tema.ACCION_TEXTO);
         return this;
     }
 
-    /* octogono de esquinas cortadas, compartido por todos los botones */
     public static Shape octogono(double w, double h) {
         double c = h * 0.30;
         Path2D p = new Path2D.Double();

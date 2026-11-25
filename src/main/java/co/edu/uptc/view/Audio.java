@@ -1,25 +1,27 @@
 package co.edu.uptc.view;
 
+import javax.sound.sampled.*;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineEvent;
-
 public final class Audio {
+
+    private static final String RUTA_MUSICA = "/audio/musica.wav";
+    private static final String RUTA_CLIC = "/audio/efectos/click.wav";
+    private static final String RUTA_EXPLOSION = "/audio/efectos/explosion.wav";
+    private static final String RUTA_AGUA = "/audio/efectos/agua.wav";
+    private static final String CLAVE_MANDO = "audio.mando";
 
     private static Clip musica;
     private static int volumenMusica = 50;   // 0..100
     private static int volumenEfectos = 50;  // 0..100
+    private static boolean vozDeMando;
 
     private Audio() { }
 
     public static void iniciarMusica() {
         if (musica != null && musica.isRunning()) return;
-        try (InputStream in = Audio.class.getResourceAsStream("/audio/musica.wav")) {
+        try (InputStream in = Audio.class.getResourceAsStream(RUTA_MUSICA)) {
             if (in == null) return;
             AudioInputStream ais = AudioSystem.getAudioInputStream(new BufferedInputStream(in));
             musica = AudioSystem.getClip();
@@ -32,12 +34,24 @@ public final class Audio {
     }
 
     public static void efectoClic() {
-        reproducirEfecto("/audio/click.wav");
+        reproducirEfecto(RUTA_CLIC);
     }
 
-    /* sonido de explosión cuando un disparo golpea un barco (usa el volumen de "efectos de sonido") */
+
     public static void efectoExplosion() {
-        reproducirEfecto("/audio/explosion.wav");
+        reproducirEfecto(RUTA_EXPLOSION);
+    }
+
+
+    public static void efectoAgua() {
+        reproducirEfecto(RUTA_AGUA);
+    }
+
+
+    public static void vozDeMando() {
+        if (vozDeMando) {
+            reproducirEfecto(Textos.t(CLAVE_MANDO));
+        }
     }
 
     private static void reproducirEfecto(String ruta) {
@@ -63,6 +77,10 @@ public final class Audio {
 
     public static void setVolumenEfectos(int v) {
         volumenEfectos = Math.max(0, Math.min(100, v));
+    }
+
+    public static void setVozDeMando(boolean activa) {
+        vozDeMando = activa;
     }
 
 

@@ -27,7 +27,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 
-/*ranking: mejores victorias (menos turnos) de los perfiles guardados */
+
 public class PantallaEstadisticas extends Pantalla {
 
     public PantallaEstadisticas(Navegador nav, ControladorVista ctrl) {
@@ -70,13 +70,12 @@ public class PantallaEstadisticas extends Pantalla {
         }
         add(centrado(panel, 12), BorderLayout.CENTER);
 
-        BotonMarino menu = new BotonMarino(Textos.t("comun.menu"), Iconos.de(Iconos.Tipo.ANCLA, 28),
-                BotonMarino.Forma.CHAFLAN, 300, 58, 22);
+        BotonMarino menu = BotonMarino.estandar(Textos.t("comun.menu"), Iconos.de(Iconos.Tipo.ANCLA, 28));
         menu.addActionListener(e -> nav.ir(IdPantalla.MENU));
         add(new BarraInferior(null, menu, null), BorderLayout.SOUTH);
     }
 
-    /* ventana emergente con las estadisticas completas del jugador pulsado */
+
     private void mostrarEstadisticas(String nombre) {
         EstadisticasJugadorVista datos = ctrl.getEstadisticas(nombre);
         if (datos == null) {

@@ -1,34 +1,37 @@
 package co.edu.uptc.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Partida {
-    public static final String nombreComputador = "Computador";
+    public static final String NOMBRE_COMPUTADOR = "Computador";
 
-    public enum Etapa { COLOCANDO_BARCOS, EN_CURSO, TERMINADA }
+    private static final int[][] VECINAS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
-    private Jugador jugador1;
-    private Jugador jugador2;
+    private String jugador1;
+    private String jugador2;
     private boolean contraComputador;
     private Tablero tablero1;
     private Tablero tablero2;
-    private Jugador jugadorActual;
-    private Jugador ganador;
+    private String jugadorActual;
+    private String ganador;
+    private int[] ultimoImpacto;
     private transient Random rd;
 
     private Partida() {
     }
 
-    public Partida(Jugador jugador1) {
-        this(jugador1, new Jugador(nombreComputador, "", Jugador.avatarPorDefecto), true);
+    public Partida(String jugador1) {
+        this(jugador1, NOMBRE_COMPUTADOR, true);
         tablero2.colocarFlotaAleatoria();
     }
 
-    public Partida(Jugador jugador1, Jugador jugador2) {
+    public Partida(String jugador1, String jugador2) {
         this(jugador1, jugador2, false);
     }
 
-    private Partida(Jugador jugador1, Jugador jugador2, boolean contraComputador) {
+    private Partida(String jugador1, String jugador2, boolean contraComputador) {
         validarJugadores(jugador1, jugador2, contraComputador);
         this.jugador1 = jugador1;
         this.jugador2 = jugador2;
@@ -40,7 +43,7 @@ public class Partida {
         this.rd = new Random();
     }
 
-    private static void validarJugadores(Jugador jugador1, Jugador jugador2, boolean contraComputador) {
+    private static void validarJugadores(String jugador1, String jugador2, boolean contraComputador) {
         if (esNombreNoValido(jugador1)) {
             throw new IllegalArgumentException("Nombre del jugador 1 no válido.");
         }
@@ -55,56 +58,71 @@ public class Partida {
         }
     }
 
-    private static boolean esNombreNoValido(Jugador jugador) {
-        return jugador == null
-                || jugador.getNombre() == null
-                || jugador.getNombre().isBlank()
-                || jugador.getNombre().equalsIgnoreCase(nombreComputador);
+    private static boolean esNombreNoValido(String nombre) {
+        return nombre == null || nombre.isBlank() || nombre.equalsIgnoreCase(NOMBRE_COMPUTADOR);
     }
 
-    private static boolean mismoJugador(Jugador a, Jugador b) {
-        return a != null && b != null && a.getNombre().equalsIgnoreCase(b.getNombre());
+    private static boolean mismoJugador(String a, String b) {
+        return a != null && a.equalsIgnoreCase(b);
     }
 
     public boolean puedeComenzar() {
         return tablero1.estaListo() && tablero2.estaListo();
     }
 
-    public int disparar(int fila, int columna) {
+    public Impacto disparar(int fila, int columna) {
         if (esTurnoComputador()) {
-            return Tablero.invalido;
+            return Impacto.INVALIDO;
         }
         return ejecutarDisparo(fila, columna);
     }
 
-    public int disparoComputador() {
+    public Impacto disparoComputador() {
         if (!esTurnoComputador() || hayGanador() || !puedeComenzar()) {
-            return Tablero.invalido;
+            return Impacto.INVALIDO;
         }
+        int[] casilla = elegirCasillaComputador();
+        Impacto resultado = ejecutarDisparo(casilla[0], casilla[1]);
+        if (resultado == Impacto.TOCADO) {
+            ultimoImpacto = casilla;
+        } else if (resultado == Impacto.HUNDIDO) {
+            ultimoImpacto = null;
+        }
+        return resultado;
+    }
+
+    private int[] elegirCasillaComputador() {
         if (rd == null) {
             rd = new Random();
         }
-        int fila = rd.nextInt(Tablero.tamano);
-        int columna = rd.nextInt(Tablero.tamano);
-        while (tablero1.getDisparo(fila, columna) != Tablero.sinDisparar) {
-            fila = rd.nextInt(Tablero.tamano);
-            columna = rd.nextInt(Tablero.tamano);
+        if (ultimoImpacto != null) {
+            List<int[]> cercanas = new ArrayList<>();
+            for (int[] desplazamiento : VECINAS) {
+                int fila = ultimoImpacto[0] + desplazamiento[0];
+                int columna = ultimoImpacto[1] + desplazamiento[1];
+                if (tablero1.sinDisparar(fila, columna)) {
+                    cercanas.add(new int[]{fila, columna});
+                }
+            }
+            if (!cercanas.isEmpty()) {
+                return cercanas.get(rd.nextInt(cercanas.size()));
+            }
         }
-        return ejecutarDisparo(fila, columna);
+        return tablero1.casillaSinDisparar(rd);
     }
 
-    private int ejecutarDisparo(int fila, int columna) {
+    private Impacto ejecutarDisparo(int fila, int columna) {
         if (hayGanador() || !puedeComenzar()) {
-            return Tablero.invalido;
+            return Impacto.INVALIDO;
         }
         Tablero rival = getTableroRival();
-        int resultado = rival.recibirDisparo(fila, columna);
-        if (resultado == Tablero.invalido) {
+        Impacto resultado = rival.recibirDisparo(fila, columna);
+        if (resultado == Impacto.INVALIDO) {
             return resultado;
         }
         if (rival.flotaHundida()) {
             ganador = jugadorActual;
-        } else if (resultado == Tablero.agua) {
+        } else if (resultado == Impacto.AGUA) {
             cambiarTurno();
         }
         return resultado;
@@ -114,7 +132,7 @@ public class Partida {
         jugadorActual = mismoJugador(jugadorActual, jugador1) ? jugador2 : jugador1;
     }
 
-    public int getTurnos(Jugador jugador) {
+    public int getTurnos(String jugador) {
         Tablero rival;
         if (mismoJugador(jugador, jugador1)) {
             rival = tablero2;
@@ -123,7 +141,7 @@ public class Partida {
         } else {
             return 0;
         }
-        boolean gano = ganador != null && mismoJugador(ganador, jugador);
+        boolean gano = mismoJugador(ganador, jugador);
         return rival.contarDisparosAgua() + (gano ? 1 : 0);
     }
 
@@ -135,52 +153,30 @@ public class Partida {
         return ganador != null;
     }
 
-    public Jugador getGanador() {
+    public String getNombreGanador() {
         return ganador;
     }
 
-    public String getNombreGanador() {
-        return ganador == null ? null : ganador.getNombre();
-    }
-
-    public Jugador getJugadorActual() {
-        return jugadorActual;
-    }
-
-    public String getNombreTurnoActual() {
-        return jugadorActual.getNombre();
-    }
-
-    public Tablero getTableroActual() {
-        return mismoJugador(jugadorActual, jugador1) ? tablero1 : tablero2;
-    }
-
-    public Tablero getTableroRival() {
-        return mismoJugador(jugadorActual, jugador1) ? tablero2 : tablero1;
-    }
-
-    public Etapa getEtapa() {
-        if (hayGanador()) {
-            return Etapa.TERMINADA;
-        }
-        if (!puedeComenzar()) {
-            return Etapa.COLOCANDO_BARCOS;
-        }
-        return Etapa.EN_CURSO;
-    }
-
-    public Jugador getPerdedor() {
+    public String getNombrePerdedor() {
         if (ganador == null) {
             return null;
         }
         return mismoJugador(ganador, jugador1) ? jugador2 : jugador1;
     }
 
-    public Jugador getJugador1() {
+    public String getNombreTurnoActual() {
+        return jugadorActual;
+    }
+
+    public Tablero getTableroRival() {
+        return mismoJugador(jugadorActual, jugador1) ? tablero2 : tablero1;
+    }
+
+    public String getNombreJugador1() {
         return jugador1;
     }
 
-    public Jugador getJugador2() {
+    public String getNombreJugador2() {
         return jugador2;
     }
 

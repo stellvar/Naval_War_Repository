@@ -36,10 +36,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 
-/*
- * colocación de la flota, combate por turnos, turno del computador y final.
- * Todo el estado vive en el controlador; esta pantalla solo lo dibuja y le avisa de las acciones.
- */
+
 public class PantallaJuego extends Pantalla {
 
     private static final int PAUSA_COMPUTADOR_MS = 900;
@@ -98,13 +95,13 @@ public class PantallaJuego extends Pantalla {
         centro.add(columna(Textos.t("juego.enemigo"), EstiloFlota.ENEMIGO, tableroEnemigo, flotaEnemiga));
         add(centro, BorderLayout.CENTER);
 
-        engranaje = new BotonIcono(Iconos.de(Iconos.Tipo.ENGRANAJE, 34), 64);
+        engranaje = new BotonIcono(Iconos.de(Iconos.Tipo.ENGRANAJE, 32), BotonMarino.ALTO_ESTANDAR);
         engranaje.addActionListener(e -> alternarSonido());
         mensaje = new JLabel(mensajeInicial(colocando), SwingConstants.CENTER);
         mensaje.setFont(Tema.fuente(Font.BOLD, 16));
         mensaje.setForeground(Tema.TEXTO);
-        BotonMarino accion = new BotonMarino(Textos.t(colocando ? "comun.listo" : "juego.terminar"),
-                Iconos.de(Iconos.Tipo.ANCLA, 28, Tema.ACCION_TEXTO), BotonMarino.Forma.CHAFLAN, 280, 52, 18).principal();
+        BotonMarino accion = BotonMarino.estandar(Textos.t(colocando ? "comun.listo" : "juego.terminar"),
+                Iconos.de(Iconos.Tipo.ANCLA, 28, Tema.ACCION_TEXTO)).principal();
         accion.addActionListener(e -> {
             if (ctrl.isColocando()) {
                 alConfirmarFlota();
@@ -117,7 +114,7 @@ public class PantallaJuego extends Pantalla {
         SwingUtilities.invokeLater(this::alEntrar);
     }
 
-    /* tras dibujar: relevo pendiente (partida cargada) o turno del computador */
+
     private void alEntrar() {
         if (ctrl.hayGanador()) {
             return;
@@ -164,7 +161,7 @@ public class PantallaJuego extends Pantalla {
         return columna;
     }
 
-    /* vuelve a leer los tableros del controlador */
+
     private void actualizar() {
         TableroVista propio = ctrl.getTableroPropio();
         TableroVista enemigo = ctrl.getTableroEnemigo();
@@ -268,10 +265,21 @@ public class PantallaJuego extends Pantalla {
         }
     }
 
-    /* explosión cuando el disparo golpea un barco (tocado o hundido) */
+
     private void reproducirImpacto(ResultadoDisparo resultado) {
-        if (resultado.tipo() == ResultadoDisparo.Tipo.TOCADO || resultado.tipo() == ResultadoDisparo.Tipo.HUNDIDO) {
-            Audio.efectoExplosion();
+        switch (resultado.tipo()) {
+            case AGUA:
+                Audio.efectoAgua();
+                break;
+            case TOCADO:
+                Audio.efectoExplosion();
+                break;
+            case HUNDIDO:
+                Audio.efectoExplosion();
+                Audio.vozDeMando();
+                break;
+            default:
+                break;
         }
     }
 
@@ -313,7 +321,7 @@ public class PantallaJuego extends Pantalla {
         return boton;
     }
 
-    /* "pasa el dispositivo a ...": al pulsar LISTO se redibuja la pantalla para el nuevo jugador */
+
     private void mostrarRelevo(String nombre) {
         DialogoBotones dialogo = new DialogoBotones(Textos.t("relevo.titulo", nombre.toUpperCase()));
         dialogo.setMensaje(Textos.t("relevo.msg", nombre));

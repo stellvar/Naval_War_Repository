@@ -1,18 +1,14 @@
 package co.edu.uptc.model;
 
 public abstract class Barco {
-    private String nombre;
     private int tamano;
-    private int vida;
     private int fila;
     private int columna;
     private boolean horizontal;
     private boolean[] impactos;
 
-    public Barco(String nombre, int tamano) {
-        this.nombre = nombre;
+    public Barco(int tamano) {
         this.tamano = tamano;
-        this.vida = tamano;
         this.fila = -1;
         this.columna = -1;
         this.horizontal = true;
@@ -54,30 +50,24 @@ public abstract class Barco {
         return posicionEn(fila, columna) != -1;
     }
 
-    public boolean recibirImpacto(int fila, int columna) {
+    public void recibirImpacto(int fila, int columna) {
         int posicion = posicionEn(fila, columna);
-        if (posicion == -1 || impactos[posicion]) {
-            return false;
+        if (posicion != -1) {
+            impactos[posicion] = true;
         }
-        impactos[posicion] = true;
-        vida--;
-        return true;
     }
 
     public boolean estaHundido() {
-        return vida == 0;
-    }
-
-    public String getNombre() {
-        return nombre;
+        for (boolean impacto : impactos) {
+            if (!impacto) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public int getTamano() {
         return tamano;
-    }
-
-    public int getVida() {
-        return vida;
     }
 
     public int getFila() {

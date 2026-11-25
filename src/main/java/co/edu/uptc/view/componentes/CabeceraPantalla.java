@@ -33,7 +33,6 @@ public class CabeceraPantalla extends JPanel {
         this(texto, 36, 166);
     }
 
-    /* cabecera con título de otro tamaño; un alto mayor lo baja, acercándolo al contenido (menú principal) */
     public CabeceraPantalla(String texto, float tamanoTitulo, int alto) {
         setOpaque(false);
         setLayout(new BorderLayout());

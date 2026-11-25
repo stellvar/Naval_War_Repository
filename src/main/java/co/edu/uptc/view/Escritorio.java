@@ -20,7 +20,6 @@ import java.awt.Dimension;
 import java.util.EnumMap;
 import java.util.Map;
 
-/* contenedor de toda la interfaz */
 public class Escritorio extends JLayeredPane implements Navegador {
 
     private final CardLayout cartas = new CardLayout();
